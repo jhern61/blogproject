@@ -16,16 +16,6 @@ public class User {
         return username;
     }
 
-    public static User create(String username, UserRepository repository) {
-        return repository.find(username);
-    }
 
-    public boolean authenticate(String password) {
-        return this.password.equals(password);
-    }
-
-    public static User create(String username) {
-        return create(username, new UserRepository());
-    }
 
 }
