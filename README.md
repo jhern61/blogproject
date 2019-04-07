@@ -6,7 +6,7 @@ Blog Project for Database Sys Design (CS 485-01)
 
 Create MongoDB database. Client requested we create a social media blog like project. 
 
-## Requiremetns
+## Requirements
 
 
 * Allow comments
