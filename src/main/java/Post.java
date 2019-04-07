@@ -33,6 +33,8 @@ public class Post {
         this.tags = tags;
     }
 
+    public Post(){}
+
     public String getTitle() {
         return title;
     }
