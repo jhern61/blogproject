@@ -21,12 +21,7 @@ public class BlogClient {
         MongoCollection<Document> userCollection = database.getCollection("User");
         MongoCollection<Document> postCollection = database.getCollection("Post");
 
-        //Create User.
-        Document user = new Document("userName", "Joe")
-                .append("password", "password");
 
-        //Insert object into collection.
-        userCollection.insertOne(user);
 
 
         // Delete Car
@@ -37,6 +32,7 @@ public class BlogClient {
 
         //Variables
         boolean flag = true;
+        User activeUser = new User("test", "password");
 
         //Show login menu
         loginMenu();
@@ -52,6 +48,25 @@ public class BlogClient {
 
                 //Register
                 case 2:
+                    System.out.println("-------Registration Page-------");
+                    System.out.print("Enter your new username: ");
+                    activeUser.setUsername(scanner.next());
+                    System.out.print("\nNew password: ");
+                    activeUser.setPassword(scanner.next());
+                    activeUser.setMyPosts(null);
+
+                    //Create User.
+                    Document user = new Document("userName", activeUser.getUsername())
+                            .append("password", activeUser.getPassword())
+                            .append("posts", activeUser.getMyPosts());
+
+                    /* Insert object into collection. */
+                    userCollection.insertOne(user);
+
+                    //Go to homePage
+
+
+
                     break;
                 default:
                     System.out.println("invalid command");
@@ -74,9 +89,14 @@ public class BlogClient {
 
     }
 
-    public static void register(String userName, String password) {
 
-    }
+
+
+
+
+
+
+
 
 
 }
