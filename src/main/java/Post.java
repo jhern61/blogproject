@@ -10,10 +10,13 @@ Users “walls”
 * */
 
 
+
 import java.util.ArrayList;
 
 
 public class Post {
+
+
 
     String title;
     String author;

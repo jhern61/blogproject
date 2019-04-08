@@ -1,6 +1,17 @@
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
 import java.util.ArrayList;
 
 public class User {
+
+    //MongoDB stuff
+    MongoClient mongoClient = new MongoClient("localhost", 27017);
+    //Connect to database.
+    MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
+    MongoCollection<Document> postCollection = database.getCollection("Blog");
 
     String username;
     String password;
@@ -40,20 +51,32 @@ public class User {
         return myPosts;
     }
 
-    public void createPost(String title, String author, String postBody, String postDate) {
+
+
+
+    //(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags)
+    public Post createPost(String title, String author, String postBody, String postDate, ArrayList tags) {
 
         Post post = new Post();
-        post.setTitle(title);
-        post.setAuthor(author);
-        post.setPostBody(postBody);
-        post.setPostDate(postDate);
-        post.setViews(0);
-        post.setComments(null);
-        post.setTags(null);
 
+//        ArrayList tagTest = new ArrayList<String>();
+//        tags.add("Test");
+//        tags.add("tag2");
+
+        //Create object.
+        Document newPost = new Document("title", title)
+                                .append("author", author)
+                                .append("postBody", postBody)
+                                .append("postDate", postDate)
+                                .append("views", 0)
+                                .append("comments", "null")
+                                .append("tags", "null");
+
+        postCollection.insertOne(newPost);
         myPosts.add(post);
-
+        return  post;
     }
+
 
     public void likePost(String postTitle){
 

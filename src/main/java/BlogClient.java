@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BlogClient {
@@ -18,14 +19,17 @@ public class BlogClient {
         MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
 
 
+        ArrayList globalPost = new ArrayList<Post>();
+
+
         MongoCollection<Document> userCollection = database.getCollection("User");
-        MongoCollection<Document> postCollection = database.getCollection("Post");
+
 
 
 
 
         // Delete Car
-        postCollection.deleteOne(new Document("model", "iPhone X"));
+        //postCollection.deleteOne(new Document("model", "iPhone X"));
 
 
 
@@ -64,8 +68,34 @@ public class BlogClient {
                     userCollection.insertOne(user);
 
                     //Go to homePage
+                    break;
+
+                //Create post
+                case 3:
+                    //(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags)
+
+                    System.out.print("\nEnter title: ");
+                    String title = scanner.next();
+
+                    System.out.print("\nEnter body: ");
+                    String body = scanner.next();
+
+                    // Post date
+                    String postDate = "";
+                    //Set view
+                    int views = 0;
+
+                    //comments
+
+                    //add tags
+                    System.out.print("\nAdd tags");
+
+                    ArrayList tagList =  new ArrayList<String>();
+                    tagList.add("test");
 
 
+                    activeUser.createPost(title, activeUser.getUsername(), body, postDate, tagList);
+                    activeUser.getMyPosts();
 
                     break;
                 default:
@@ -81,11 +111,18 @@ public class BlogClient {
     public static void loginMenu(){
         System.out.println("\n----------Welcome----------------\n" +
                 "\n1 - Login " +
-                "\n2 - Register");
+                "\n2 - Register" +
+                "\n3 - Create Post " +
+                "\n4 - NILL " );
 
     }
 
     public static void login(String userName, String password){
+
+    }
+
+
+    public static void createPost(){
 
     }
 
