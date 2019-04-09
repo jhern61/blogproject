@@ -88,12 +88,13 @@ public class BlogClient {
                     System.out.print("\nAdd tags");
 
                     ArrayList tagList = new ArrayList<String>();
+                    ArrayList commentList = new ArrayList<String>();
                     tagList.add("test");
+                    commentList.add("this is a comment");
 
-
-                    activeUser.createPost(title, activeUser.getUsername(), body, postDate, tagList);
-                    activeUser.getMyPosts();
-
+                    //activeUser.createPost(title, activeUser.getUsername(), body, postDate, tagList);
+                    //(title, author,  postBody,  postDate,  views,  comments,  tags)
+                    activeUser.createPost(title, activeUser.getUsername(), body, "4-55-4454", 0, commentList.get(0), tagList.get(0));
                     break;
 
                 //Print my posts
