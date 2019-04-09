@@ -43,6 +43,7 @@ public class BlogClient {
         System.out.print("\nEnter command: ");
         int userCommand = scanner.nextInt();
 
+
         while (flag) {
             switch (userCommand) {
                 //Login
@@ -98,6 +99,12 @@ public class BlogClient {
                     activeUser.getMyPosts();
 
                     break;
+
+                    //View all posts
+                case 4:
+
+
+                    break;
                 default:
                     System.out.println("invalid command");
 
@@ -113,7 +120,7 @@ public class BlogClient {
                 "\n1 - Login " +
                 "\n2 - Register" +
                 "\n3 - Create Post " +
-                "\n4 - NILL " );
+                "\n4 - NuLL " );
 
     }
 
