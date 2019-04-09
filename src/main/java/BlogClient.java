@@ -23,15 +23,11 @@ public class BlogClient {
 
 
         MongoCollection<Document> userCollection = database.getCollection("User");
-
-
-
+        MongoCollection<Document> postCollection = database.getCollection("Blog");
 
 
         // Delete Car
         //postCollection.deleteOne(new Document("model", "iPhone X"));
-
-
 
 
         //Variables
@@ -91,7 +87,7 @@ public class BlogClient {
                     //add tags
                     System.out.print("\nAdd tags");
 
-                    ArrayList tagList =  new ArrayList<String>();
+                    ArrayList tagList = new ArrayList<String>();
                     tagList.add("test");
 
 
@@ -100,9 +96,11 @@ public class BlogClient {
 
                     break;
 
-                    //View all posts
+                //Print my posts
                 case 4:
 
+                    System.out.println(activeUser.getMyPosts().toString());
+                    activeUser.toString();
 
                     break;
                 default:
@@ -112,35 +110,32 @@ public class BlogClient {
         }
 
 
-
     }
 
-    public static void loginMenu(){
+    public static void loginMenu() {
         System.out.println("\n----------Welcome----------------\n" +
                 "\n1 - Login " +
                 "\n2 - Register" +
                 "\n3 - Create Post " +
-                "\n4 - NuLL " );
+                "\n4 - My Post" +
+                "\n4 - Global Posts");
+
 
     }
 
-    public static void login(String userName, String password){
-
-    }
-
-
-    public static void createPost(){
+    public static void login(String userName, String password) {
 
     }
 
 
+    public static void createPost() {
+
+    }
 
 
+    public void printMyUserPost() {
 
-
-
-
-
+    }
 
 
 }

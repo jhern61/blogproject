@@ -15,6 +15,7 @@ public class User {
 
     String username;
     String password;
+    Post post;
 
     ArrayList<Post> myPosts = new ArrayList<Post>();
 
