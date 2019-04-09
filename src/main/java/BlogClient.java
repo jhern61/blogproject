@@ -59,7 +59,7 @@ public class BlogClient {
                     //Create User.
                     Document user = new Document("userName", activeUser.getUsername())
                             .append("password", activeUser.getPassword())
-                            .append("posts", activeUser.getMyPosts());
+                            .append("posts", activeUser.getMyPosts()); //getMyPosts
 
                     /* Insert object into collection. */
                     userCollection.insertOne(user);
@@ -93,15 +93,17 @@ public class BlogClient {
                     commentList.add("this is a comment");
 
                     //activeUser.createPost(title, activeUser.getUsername(), body, postDate, tagList);
+
                     //(title, author,  postBody,  postDate,  views,  comments,  tags)
-                    activeUser.createPost(title, activeUser.getUsername(), body, "4-55-4454", 0, commentList.get(0), tagList.get(0));
+                    activeUser.createPost(title, activeUser.getUsername(), body, "4-55-2019", 0, commentList , tagList);
+
                     break;
 
                 //Print my posts
                 case 4:
 
-                    System.out.println(activeUser.getMyPosts().toString());
-                    activeUser.toString();
+                    System.out.println(activeUser.getMyPosts());
+
 
                     break;
                 default:

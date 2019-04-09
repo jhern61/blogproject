@@ -48,29 +48,46 @@ public class User {
         this.myPosts = myPosts;
     }
 
-    public ArrayList<Post> getMyPosts() {
-        return myPosts;
+
+
+
+    public Post getMyPosts() {
+        Post post = new Post();
+        for (int i = 0; i < myPosts.size() ; i++) {
+            System.out.println(myPosts.get(i));
+                post = myPosts.get(i);
+        }
+        return post;
     }
 
 
 
 
-    //(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags)
-    public Post createPost(String title, String author, String postBody, String postDate, ArrayList tags) {
+    //String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags
+    public Post createPost(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags) {
 
-       // Post post = new Post(title, author, postBody, postDate, tags);
+        Post post = new Post(title, author, postBody, postDate, 0, comments,  tags);
+
 
 
 
 
         //Create object.
-        Document newPost = new Document("title", title)
-                                .append("author", author)
-                                .append("postBody", postBody)
-                                .append("postDate", postDate)
-                                .append("views", 0)
-                                .append("comments", "null")
-                                .append("tags", "null");
+//        Document newPost = new Document("title", title)
+//                                .append("author", author)
+//                                .append("postBody", postBody)
+//                                .append("postDate", postDate)
+//                                .append("views", 0)
+//                                .append("comments", "null")
+//                                .append("tags", "null");
+
+        Document newPost = new Document("title", post.title)
+                .append("author", post.author)
+                .append("postBody", post.postBody)
+                .append("postDate", post.postDate)
+                .append("views", 0)
+                .append("comments", "null")
+                .append("tags", "null");
 
         postCollection.insertOne(newPost);
         myPosts.add(post);
