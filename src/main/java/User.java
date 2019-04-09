@@ -15,9 +15,9 @@ public class User {
 
     String username;
     String password;
-    Post post;
 
     ArrayList<Post> myPosts = new ArrayList<Post>();
+
 
     public User(String username, String password) {
         this.password = password;
@@ -58,11 +58,10 @@ public class User {
     //(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags)
     public Post createPost(String title, String author, String postBody, String postDate, ArrayList tags) {
 
-        Post post = new Post();
+       // Post post = new Post(title, author, postBody, postDate, tags);
 
-//        ArrayList tagTest = new ArrayList<String>();
-//        tags.add("Test");
-//        tags.add("tag2");
+
+
 
         //Create object.
         Document newPost = new Document("title", title)
