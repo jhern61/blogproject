@@ -12,6 +12,7 @@ public class User {
     //Connect to database.
     MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
     MongoCollection<Document> postCollection = database.getCollection("Blog");
+    MongoCollection<Document> userCollection = database.getCollection("User");
 
     String username;
     String password;
@@ -69,18 +70,6 @@ public class User {
         Post post = new Post(title, author, postBody, postDate, 0, comments,  tags);
 
 
-
-
-
-        //Create object.
-//        Document newPost = new Document("title", title)
-//                                .append("author", author)
-//                                .append("postBody", postBody)
-//                                .append("postDate", postDate)
-//                                .append("views", 0)
-//                                .append("comments", "null")
-//                                .append("tags", "null");
-
         Document newPost = new Document("title", post.title)
                 .append("author", post.author)
                 .append("postBody", post.postBody)
@@ -95,9 +84,28 @@ public class User {
     }
 
 
+
+
+    public void register(String username, String password) {
+        //Create user with parameters passed in
+        User user = new User(username, password);
+
+
+        //Create User.
+        Document newUser = new Document("userName", user.getUsername())
+                .append("password", user.getPassword())
+                .append("posts", user.getMyPosts()); //getMyPosts
+
+        /* Insert object into collection. */
+        userCollection.insertOne(newUser);
+    }
+
+
     public void likePost(String postTitle){
 
     }
+
+
 
     @Override
     public String toString() {

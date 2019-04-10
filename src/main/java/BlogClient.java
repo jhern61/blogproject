@@ -26,9 +26,6 @@ public class BlogClient {
         MongoCollection<Document> postCollection = database.getCollection("Blog");
 
 
-        // Delete Car
-        //postCollection.deleteOne(new Document("model", "iPhone X"));
-
 
         //Variables
         boolean flag = true;
@@ -49,21 +46,7 @@ public class BlogClient {
 
                 //Register
                 case 2:
-                    System.out.println("-------Registration Page-------");
-                    System.out.print("Enter your new username: ");
-                    activeUser.setUsername(scanner.next());
-                    System.out.print("\nNew password: ");
-                    activeUser.setPassword(scanner.next());
-                    activeUser.setMyPosts(null);
-
-                    //Create User.
-                    Document user = new Document("userName", activeUser.getUsername())
-                            .append("password", activeUser.getPassword())
-                            .append("posts", activeUser.getMyPosts()); //getMyPosts
-
-                    /* Insert object into collection. */
-                    userCollection.insertOne(user);
-
+                    activeUser.register("Player1", "password");
                     //Go to homePage
                     break;
 
@@ -79,8 +62,7 @@ public class BlogClient {
 
                     // Post date
                     String postDate = "";
-                    //Set view
-                    int views = 0;
+
 
                     //comments
 
@@ -92,9 +74,7 @@ public class BlogClient {
                     tagList.add("test");
                     commentList.add("this is a comment");
 
-                    //activeUser.createPost(title, activeUser.getUsername(), body, postDate, tagList);
 
-                    //(title, author,  postBody,  postDate,  views,  comments,  tags)
                     activeUser.createPost(title, activeUser.getUsername(), body, "4-55-2019", 0, commentList , tagList);
 
                     break;
@@ -131,14 +111,9 @@ public class BlogClient {
     }
 
 
-    public static void createPost() {
-
-    }
 
 
-    public void printMyUserPost() {
 
-    }
 
 
 }

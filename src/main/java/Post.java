@@ -97,12 +97,12 @@ public class Post {
     @Override
     public String toString() {
         return "Post: " +
-                "Title: " + title + '\'' +
-                "Author: " + author + '\'' +
-                "PostBody: " + postBody + '\'' +
-                "Post Date: " + postDate + '\'' +
-                "Views" + views +  '\'' +
-                "Comments: " + comments +  '\'' +
-                "Tags" + tags;
+                "\nTitle: " + title +
+                "\nAuthor: " + author +
+                "\nPostBody: " + postBody +
+                "\nPost Date: " + postDate +
+                "\nViews" + views +
+                "\nComments: " + comments +
+                "\nTags" + tags;
     }
 }
