@@ -2,17 +2,22 @@
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class BlogClient {
+public class BlogClient extends Application {
 
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
+        Application.launch(args);
 
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         //Connect to database.
@@ -111,11 +116,15 @@ public class BlogClient {
     }
 
 
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("BlogGUI.fxml"));
 
+        Scene scene = new Scene(root, 500, 500);
 
-
-
-
+        stage.setTitle("FXML Welcome");
+        stage.setScene(scene);
+        stage.show();
+    }
 }
 
 
