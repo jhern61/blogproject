@@ -94,6 +94,12 @@ public class Post {
         this.tags = tags;
     }
 
+
+
+    public void likePost() {
+        views++;
+    }
+
     @Override
     public String toString() {
         return "Post: " +
@@ -101,8 +107,8 @@ public class Post {
                 "\nAuthor: " + author +
                 "\nPostBody: " + postBody +
                 "\nPost Date: " + postDate +
-                "\nViews" + views +
+                "\nViews: " + views +
                 "\nComments: " + comments +
-                "\nTags" + tags;
+                "\nTags: " + tags;
     }
 }

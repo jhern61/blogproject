@@ -12,7 +12,7 @@ public class User {
     //Connect to database.
     MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
     MongoCollection<Document> postCollection = database.getCollection("Blog");
-    MongoCollection<Document> userCollection = database.getCollection("User");
+    //MongoCollection<Document> userCollection = database.getCollection("User");
 
     String username;
     String password;
@@ -51,15 +51,20 @@ public class User {
 
 
 
+//
+//    public Post getMyPosts() {
+//        Post post = new Post();
+//
+//        if (myPosts.isEmpty()) {
+//            System.out.println("null");
+//        } else
+//            for (int i = 0; i < myPosts.size(); i++) {
+//                System.out.println(myPosts.get(i));
+//                post = myPosts.get(i);
+//            }
+//        return post;
+//    }
 
-    public Post getMyPosts() {
-        Post post = new Post();
-        for (int i = 0; i < myPosts.size() ; i++) {
-            System.out.println(myPosts.get(i));
-                post = myPosts.get(i);
-        }
-        return post;
-    }
 
 
 
@@ -87,17 +92,7 @@ public class User {
 
 
     public void register(String username, String password) {
-        //Create user with parameters passed in
-        User user = new User(username, password);
 
-
-        //Create User.
-        Document newUser = new Document("userName", user.getUsername())
-                .append("password", user.getPassword())
-                .append("posts", user.getMyPosts()); //getMyPosts
-
-        /* Insert object into collection. */
-        userCollection.insertOne(newUser);
     }
 
 
