@@ -3,6 +3,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import javafx.application.Application;
+import java.sql.Timestamp;
+
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -75,6 +77,9 @@ public class ConsoleClient  {
                     commentList.add("this is a comment");
 
 
+
+
+
                     activeUser.createPost(title, activeUser.getUsername(), body, "4-55-2019", 0, commentList , tagList);
 
                     break;
@@ -103,6 +108,12 @@ public class ConsoleClient  {
                 "\n4 - My Post" +
                 "\n4 - Global Posts");
 
+
+    }
+
+
+
+    public static void showTags() {
 
     }
 
