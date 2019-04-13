@@ -51,19 +51,19 @@ public class User {
 
 
 
-//
-//    public Post getMyPosts() {
-//        Post post = new Post();
-//
-//        if (myPosts.isEmpty()) {
-//            System.out.println("null");
-//        } else
-//            for (int i = 0; i < myPosts.size(); i++) {
-//                System.out.println(myPosts.get(i));
-//                post = myPosts.get(i);
-//            }
-//        return post;
-//    }
+
+    public Post getMyPosts() {
+        Post post = new Post();
+
+        if (myPosts.isEmpty()) {
+            System.out.println("null");
+        } else
+            for (int i = 0; i < myPosts.size(); i++) {
+                System.out.println(myPosts.get(i));
+                post = myPosts.get(i);
+            }
+        return post;
+    }
 
 
 

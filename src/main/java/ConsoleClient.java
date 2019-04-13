@@ -41,7 +41,7 @@ public class ConsoleClient  {
             switch (userCommand) {
                 //Login
                 case 1:
-
+                    System.out.println("Welcome, " + activeUser.getUsername());
                     break;
 
                 //Register
