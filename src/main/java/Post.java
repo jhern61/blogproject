@@ -16,8 +16,6 @@ import java.util.ArrayList;
 
 public class Post {
 
-
-
     String title;
     String author;
     String postBody;
@@ -38,62 +36,16 @@ public class Post {
 
     public Post(){}
 
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getPostBody() {
-        return postBody;
-    }
-
-    public void setPostBody(String postBody) {
-        this.postBody = postBody;
-    }
-
-    public String getPostDate() {
-        return postDate;
-    }
-
-    public void setPostDate(String postDate) {
-        this.postDate = postDate;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
 
     public ArrayList getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList comments) {
-        this.comments = comments;
-    }
 
     public ArrayList getTags() {
         return tags;
     }
-
-    public void setTags(ArrayList tags) {
-        this.tags = tags;
-    }
-
 
 
     public void likePost() {
@@ -102,7 +54,7 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post: " +
+        return "\n****************************\nPost: " +
                 "\nTitle: " + title +
                 "\nAuthor: " + author +
                 "\nPostBody: " + postBody +
