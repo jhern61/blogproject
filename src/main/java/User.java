@@ -35,15 +35,33 @@ public class User {
 
 
 
-
+    public String getPassword() {
+        return password;
+    }
+    
     public String getUsername() {
         return username;
     }
 
+     public void setUsername(String username) {
+        this.username = username;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-
-
+    public void setMyPosts(ArrayList<Post> myPosts) {
+        this.myPosts = myPosts;
+    }
+    
+    public Post getMyPosts() {
+        Post post = new Post();
+        for (int i = 0; i < myPosts.size() ; i++) {
+                post = myPosts.get(i);
+        }
+        return post;
+    }
 
 
     public ArrayList<Post> loadFromDatabase() {

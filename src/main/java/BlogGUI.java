@@ -6,12 +6,10 @@
  * Date: 4/10/2019
  */
 
-
 /**
  *
  * @author bk8355tn
  */
-
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -21,18 +19,17 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class BlogGUI extends javax.swing.JFrame {
-    
-    private User activeUser = new User ();
+
+    private User activeUser = new User();
     MongoClient mongoClient = new MongoClient("localhost", 27017);
-        //Connect to database.
-        MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
+    //Connect to database.
+    MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
 
+    ArrayList globalPost = new ArrayList<Post>();
 
-        ArrayList globalPost = new ArrayList<Post>();
+    MongoCollection<Document> userCollection = database.getCollection("User");
+    MongoCollection<Document> postCollection = database.getCollection("Blog");
 
-
-        MongoCollection<Document> userCollection = database.getCollection("User");
-        MongoCollection<Document> postCollection = database.getCollection("Blog");
     /**
      * Creates new form BlogGUI
      */
@@ -105,42 +102,42 @@ public class BlogGUI extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logInButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(registerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                    .addComponent(tagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(203, 203, 203))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(logInButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(registerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                        .addComponent(tagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(18, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addGap(203, 203, 203))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(registerButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(logInButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(logOutButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tagsButton)
-                        .addGap(53, 53, 53)
-                        .addComponent(clearButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(registerButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(logInButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(logOutButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(tagsButton)
+                                                .addGap(53, 53, 53)
+                                                .addComponent(clearButton))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -150,53 +147,52 @@ public class BlogGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String userName = JOptionPane.showInputDialog("Enter a user name: ");
         activeUser.setUsername(userName);
-        String password= JOptionPane.showInputDialog("Enter a password: ");
+        String password = JOptionPane.showInputDialog("Enter a password: ");
         activeUser.setPassword(password);
-        
+
         //register user to database
         activeUser.register(activeUser.getUsername(), activeUser.getPassword());
-        
+
         //Create User.
         Document newUser = new Document("userName", activeUser.getUsername())
                 .append("password", activeUser.getPassword());
 
         /* Insert object into collection. */
         userCollection.insertOne(newUser);
-        
+
         //output successful completion of registration notification
         JOptionPane.showMessageDialog(null, "User sucessfully registered! Please Log in");
-        
-        
+
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
         // TODO add your handling code here:
         String login = JOptionPane.showInputDialog("Enter a user name: ");
         String loginPassword = JOptionPane.showInputDialog("Enter a password: ");
-        
-        try{
-        //check to veryify the username is correct
-        if(activeUser.getUsername().equalsIgnoreCase(login)){
-            
-            //check to verify password is correct
-            if(activeUser.getPassword().equals(loginPassword)){
-                
-                int selection;
-                String menu = JOptionPane.showInputDialog("\nMENU"
-					+ "\n1.Create New Post" 
-					+ "\n2.Edit Post"
-					+ "\n3.Delete Post" 
-					+ "\n4.Search by tags"
-					+ "\n5.View user wall\n\n");
-			selection = Integer.parseInt(menu);
 
-			switch (selection) {
-			case 1:
-                            
+        try {
+            //check to veryify the username is correct
+            if (activeUser.getUsername().equalsIgnoreCase(login)) {
+
+                //check to verify password is correct
+                if (activeUser.getPassword().equals(loginPassword)) {
+
+                    int selection;
+                    String menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.Edit Post"
+                            + "\n3.Delete Post"
+                            + "\n4.Search by tags"
+                            + "\n5.View user wall\n\n");
+                    selection = Integer.parseInt(menu);
+
+                    switch (selection) {
+                        case 1:
+
                             String title = JOptionPane.showInputDialog("Enter title of post: ");
-                           
+
                             String body = JOptionPane.showInputDialog("Write post body: ");
-                       
+
                             // Post date
                             String postDate = "";
 
@@ -208,51 +204,44 @@ public class BlogGUI extends javax.swing.JFrame {
                             tagList.add("test");
                             commentList.add("this is a comment");
 
+                            activeUser.createPost(title, activeUser.getUsername(), body,
+                                    "4-55-2019", 0, commentList, tagList);
 
-                    activeUser.createPost(title, activeUser.getUsername(), body, 
-                            "4-55-2019",0, commentList , tagList);
-
-                            
                             break;
                         case 2:
-                            
+
                             break;
                         case 3:
-                            
+
                             break;
                         case 4:
-                            
+
                             break;
                         case 5:
-                            
+
                             break;
-                        
-                        
-                        
-                        
-                        }//end switch statement           
-            }//end password if statement
-        }//end username if statement
-        
-        }catch(Exception e){
-            
-            if(!login.equals(activeUser.getUsername())){
+
+                    }//end switch statement           
+                }//end password if statement
+            }//end username if statement
+
+        } catch (Exception e) {
+
+            if (!login.equals(activeUser.getUsername())) {
                 JOptionPane.showMessageDialog(null, "Sorry username is incorrect");
             }
-            if(!loginPassword.equals(activeUser.getPassword())){
+            if (!loginPassword.equals(activeUser.getPassword())) {
                 JOptionPane.showMessageDialog(null, "Sorry password is incorrect");
             }
-                }
-        
-        
-        
+        }
+
     }//GEN-LAST:event_logInButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(null, "You have been logged out and the system will now close, GOOD BYE!");
         System.exit(0);
-        
+
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void tagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tagsButtonActionPerformed
@@ -268,8 +257,6 @@ public class BlogGUI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-       
-        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
