@@ -36,7 +36,7 @@ public class ConsoleClient {
 
 
 
-        //oadfromDatabase(postCollection);
+
 
 
 
@@ -144,6 +144,7 @@ public class ConsoleClient {
             case 10:
 
                 //System.out.println(activeUser.loadFromDatabase());
+                loadFromDatabase(database, postCollection);
 
                 //Show login menu
                 loginMenu();
@@ -184,20 +185,23 @@ public class ConsoleClient {
                 "\n6 - Exit" );
     }
 
-    public ArrayList<Post> loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
-        ArrayList<Post> loadedPost = new ArrayList<Post>();
 
 
-//        //Print all.
-//        for (Document cur : postCollection.find()) {
-//            System.out.println(cur.toJson());
-//                String post = database.getCollection("Blog");
-//                globalPost.add(post);
-//        }
+
+    public static void loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
+        //ArrayList<Post> loadedPost = new ArrayList<Post>();
+
+
+        //Print all.
+        for (Object cur : postCollection.find()) {
+            System.out.println(cur.toString());
+                //String post = database.getCollection("Blog");
+                //globalPost.add(post);
+        }
 //        for (int i = 0; i <loadedPost.size() ; i++) {
 //            loadedPost.get(i);
 //        }
-        return loadedPost;
+
     }
 
 
