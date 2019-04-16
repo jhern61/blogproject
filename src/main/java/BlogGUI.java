@@ -4,6 +4,14 @@
  * It allows users to register log in, (create, edit, and delete posts), view tags, and user walls. 
  * Author: Amel Nukic & Joe Hernandez
  * Date: 4/10/2019
+Hi guys, this is your requirements for the blog/forum:
+Allow comments
+Users registration (registration/login)
+Make new posts
+Track post views
+Users able to “like” posts
+Posts tags – categories
+Users “walls”
  */
 
 /**
@@ -144,7 +152,8 @@ public class BlogGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-        // TODO add your handling code here:
+
+// TODO add your handling code here:
         String userName = JOptionPane.showInputDialog("Enter a user name: ");
         activeUser.setUsername(userName);
         String password = JOptionPane.showInputDialog("Enter a password: ");
@@ -180,46 +189,58 @@ public class BlogGUI extends javax.swing.JFrame {
                     int selection;
                     String menu = JOptionPane.showInputDialog("\nMENU"
                             + "\n1.Create New Post"
-                            + "\n2.Edit Post"
-                            + "\n3.Delete Post"
-                            + "\n4.Search by tags"
-                            + "\n5.View user wall\n\n");
+                            + "\n2.Search by tags"
+                            + "\n3.View all Posts"
+                            + "\n4.View user wall\n\n");
                     selection = Integer.parseInt(menu);
 
                     switch (selection) {
-                        case 1:
+                        case 1://create post
+
+                            ArrayList tagList = new ArrayList<String>();
+                            ArrayList commentList = new ArrayList<String>();
 
                             String title = JOptionPane.showInputDialog("Enter title of post: ");
 
                             String body = JOptionPane.showInputDialog("Write post body: ");
 
-                            // Post date
-                            String postDate = "";
-
                             //add tags
-                            String tags = JOptionPane.showInputDialog("Add tags");
+                            do {
+                             
 
-                            ArrayList tagList = new ArrayList<String>();
-                            ArrayList commentList = new ArrayList<String>();
-                            tagList.add("test");
-                            commentList.add("this is a comment");
-
-                            activeUser.createPost(title, activeUser.getUsername(), body,
+                                String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
+                                if (tags.startsWith("y")) {
+                                    String tag2 = JOptionPane.showInputDialog("Enter tag: ");
+                                    tagList.add(tag2);
+                                } else {
+                                     menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.Search by tags"
+                            + "\n3.View all Posts"
+                            + "\n4.View user wall\n\n");
+                             selection = Integer.parseInt(menu);
+                                    activeUser.createPost(title, activeUser.getUsername(), body,
                                     "4-55-2019", 0, commentList, tagList);
+                                
+                                }
+                                break;
+                            } while (true);
+
+                          
+                            
+                           
+                        case 2://search by tags
 
                             break;
-                        case 2:
+                        case 3://View all posts
 
                             break;
-                        case 3:
+                        case 4://View User wall
+                            textArea.append(activeUser.getMyPosts());
 
                             break;
-                        case 4:
-
-                            break;
-                        case 5:
-
-                            break;
+                        default:
+                            JOptionPane.showMessageDialog(null, "Sorry wrong input");
 
                     }//end switch statement           
                 }//end password if statement
