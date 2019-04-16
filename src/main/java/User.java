@@ -4,6 +4,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,19 +32,11 @@ public class User {
         this.username = username;
     }
 
-    public User(){};
-
-
-
-    public String getPassword() {
-        return password;
-    }
-    
-    public String getUsername() {
-        return username;
+    public User() {
     }
 
-     public void setUsername(String username) {
+
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -51,16 +44,13 @@ public class User {
         this.password = password;
     }
 
-    public void setMyPosts(ArrayList<Post> myPosts) {
-        this.myPosts = myPosts;
+    public String getPassword() {
+        return password;
     }
-    
-    public Post getMyPosts() {
-        Post post = new Post();
-        for (int i = 0; i < myPosts.size() ; i++) {
-                post = myPosts.get(i);
-        }
-        return post;
+
+
+    public String getUsername() {
+        return username;
     }
 
 
@@ -72,31 +62,25 @@ public class User {
         for (Document cur : postCollection.find()) {
             System.out.println(cur.toJson());
 
-           // String post = database.getCollection("Blog");
+            // String post = database.getCollection("Blog");
 
-           // loadedPost.add(post);
+            // loadedPost.add(post);
         }
 
 //        for (int i = 0; i <loadedPost.size() ; i++) {
 //            loadedPost.get(i);
 //        }
-            return loadedPost;
+        return loadedPost;
 
 
     }
-
-
-
-
-
-
 
 
     public Post createPost(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags) {
 
 
         Date date = new Date();
-        Post post = new Post(title, author, postBody, date.toString(), 0, comments,  tags);
+        Post post = new Post(title, author, postBody, date.toString(), 0, comments, tags);
 
         //Create MongoDB document with user information.
         Document newPost = new Document("title", post.title)
@@ -112,8 +96,11 @@ public class User {
         //Add to users posts
         myPosts.add(post);
         //Return created post.
-        return  post;
+        return post;
     }
+
+
+
 
 
     public String getMyPosts() {
@@ -130,15 +117,14 @@ public class User {
     }
 
 
-
-
     public void register(String username, String password) {
-        Document newUser = new Document("title", username)
-                .append("author",password)
+        Document newUser = new Document("username", username)
+                .append("password", password)
                 .append("posts", myPosts);
 
         userCollection.insertOne(newUser);
     }
+
 
 
 
