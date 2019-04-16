@@ -13,6 +13,8 @@ import java.util.Scanner;
 public class ConsoleClient {
 
     private static Scanner scanner = new Scanner(System.in);
+    ArrayList globalPost = new ArrayList<Post>();
+
 
     public static void main(String[] args) {
 
@@ -31,8 +33,10 @@ public class ConsoleClient {
         MongoCollection<Document> userCollection = database.getCollection("User");
 
 
-        ArrayList globalPost = new ArrayList<Post>();
 
+
+
+        //oadfromDatabase(postCollection);
 
 
 
@@ -139,12 +143,14 @@ public class ConsoleClient {
 
             case 10:
 
-                System.out.println(activeUser.loadFromDatabase());
+                //System.out.println(activeUser.loadFromDatabase());
 
                 //Show login menu
                 loginMenu();
                 System.out.print("\nEnter command: ");
                 userCommand = scanner.nextInt();
+
+                break;
 
             default:
                 System.out.println("Invalid command");
@@ -176,6 +182,22 @@ public class ConsoleClient {
                 "\n4 - My Posts" +
                 "\n5 - Global Post " +
                 "\n6 - Exit" );
+    }
+
+    public ArrayList<Post> loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
+        ArrayList<Post> loadedPost = new ArrayList<Post>();
+
+
+//        //Print all.
+//        for (Document cur : postCollection.find()) {
+//            System.out.println(cur.toJson());
+//                String post = database.getCollection("Blog");
+//                globalPost.add(post);
+//        }
+//        for (int i = 0; i <loadedPost.size() ; i++) {
+//            loadedPost.get(i);
+//        }
+        return loadedPost;
     }
 
 
