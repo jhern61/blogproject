@@ -13,10 +13,9 @@ Users able to “like” posts
 Posts tags – categories
 Users “walls”
  */
-
 /**
  *
- * @author bk8355tn
+ * @author Que
  */
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
