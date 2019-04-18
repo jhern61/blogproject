@@ -31,11 +31,25 @@ import com.mongodb.MongoClientURI;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import com.mongodb.Block;
+import com.mongodb.util.JSON;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BlogGUI extends javax.swing.JFrame {
 
     private User activeUser = new User();
-    MongoClient mongoClient = new MongoClient("localhost", 27017);
+    
+    //Enable MongoDB logging.
+        Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+      
+        //Database Connection to Atlas
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb://joe:money100@cluster0-shard-00-00-shmom.mongodb.net:27017," +
+                        "cluster0-shard-00-01-shmom.mongodb.net:27017,cluster0-shard-00-02-shmom.mongodb.net:27017/" +
+                        "test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true");
+
+        MongoClient mongoClient = new MongoClient(uri);
+    
     //Connect to database.
     MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
 
@@ -234,12 +248,14 @@ public class BlogGUI extends javax.swing.JFrame {
                         case 2://search by tags
 
                             break;
-                        case 3://View all posts
+                        case 3://View all posts in Database
+                            
                             //find all documents in collection
                             MongoCursor<Document> cursor = userCollection.find().iterator();
                             try {
                                 while (cursor.hasNext()) {
-                                    System.out.println(cursor.next().toJson());
+                                    textArea.append(cursor.next().toString()+ "\n");
+                                    
                                 }
                             } finally {
                                 cursor.close();
