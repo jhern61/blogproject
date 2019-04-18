@@ -260,7 +260,7 @@ public class BlogGUI extends javax.swing.JFrame {
                                     String myAuthor = (String) myObj.get("author");
                                     String myBody = (String) myObj.get("postBody");
                                     String myDate = (String) myObj.get("postDate");
-                                    int myViews = (int) myObj.get("views");
+                                    Object myViews = myObj.get("views");
                                     
                                     
                                  
@@ -268,7 +268,7 @@ public class BlogGUI extends javax.swing.JFrame {
                                     textArea.append("Title: " + myTitle + "\n" 
                                             + "Author: " + myAuthor + "\n"
                                             + "Body: " + myBody + "\n"
-                                            + "Date: " + myDate + "\n");
+                                            + "Date: " + myDate + "\n"
                                             + "Views: " + myViews + "\n\n");
                                     
                                 }
