@@ -251,10 +251,25 @@ public class BlogGUI extends javax.swing.JFrame {
                         case 3://View all posts in Database
                             
                             //find all documents in collection
-                            MongoCursor<Document> cursor = userCollection.find().iterator();
+                            MongoCursor<Document> cursor = postCollection.find().iterator();
+                            
                             try {
                                 while (cursor.hasNext()) {
-                                    textArea.append(cursor.next().toString()+ "\n");
+                                    Document myObj = cursor.next();
+                                    String myTitle = (String) myObj.get("title");
+                                    String myAuthor = (String) myObj.get("author");
+                                    String myBody = (String) myObj.get("postBody");
+                                    String myDate = (String) myObj.get("postDate");
+                                    int myViews = (int) myObj.get("views");
+                                    
+                                    
+                                 
+                                    
+                                    textArea.append("Title: " + myTitle + "\n" 
+                                            + "Author: " + myAuthor + "\n"
+                                            + "Body: " + myBody + "\n"
+                                            + "Date: " + myDate + "\n");
+                                            + "Views: " + myViews + "\n\n");
                                     
                                 }
                             } finally {
