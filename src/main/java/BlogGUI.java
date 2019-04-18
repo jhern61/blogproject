@@ -250,32 +250,8 @@ public class BlogGUI extends javax.swing.JFrame {
                             break;
                         case 3://View all posts in Database
                             
-                            //find all documents in collection
-                            MongoCursor<Document> cursor = postCollection.find().iterator();
+                            viewPostsFromDB();
                             
-                            try {
-                                while (cursor.hasNext()) {
-                                    Document myObj = cursor.next();
-                                    String myTitle = (String) myObj.get("title");
-                                    String myAuthor = (String) myObj.get("author");
-                                    String myBody = (String) myObj.get("postBody");
-                                    String myDate = (String) myObj.get("postDate");
-                                    Object myViews = myObj.get("views");
-                                    
-                                    
-                                 
-                                    
-                                    textArea.append("Title: " + myTitle + "\n" 
-                                            + "Author: " + myAuthor + "\n"
-                                            + "Body: " + myBody + "\n"
-                                            + "Date: " + myDate + "\n"
-                                            + "Views: " + myViews + "\n\n");
-                                    
-                                }
-                            } finally {
-                                cursor.close();
-                            }
-
                             break;
                             
                         case 4://View User wall
@@ -317,7 +293,39 @@ public class BlogGUI extends javax.swing.JFrame {
         textArea.setText("");
     }//GEN-LAST:event_clearButtonActionPerformed
     
-    
+    public void viewPostsFromDB(){
+    //find all documents in collection
+                            MongoCursor<Document> cursor = postCollection.find().iterator();
+                            
+                            try {
+                                while (cursor.hasNext()) {
+                                    Document myObj = cursor.next();
+                                    String myTitle = (String) myObj.get("title");
+                                    String myAuthor = (String) myObj.get("author");
+                                    String myBody = (String) myObj.get("postBody");
+                                    String myDate = (String) myObj.get("postDate");
+                                    Object myViews = myObj.get("views");
+                                    ArrayList myComments = (ArrayList) myObj.get("comments");
+                                    ArrayList myTags = (ArrayList) myObj.get("tags");
+                                    
+                                    
+                                 
+                                    
+                                    textArea.append("Title: " + myTitle + "\n" 
+                                            + "Author: " + myAuthor + "\n"
+                                            + "Body: " + myBody + "\n"
+                                            + "Date: " + myDate + "\n"
+                                            + "Views: " + myViews + "\n"
+                                            + "Comments: " + myComments + "\n"
+                                            + "Tags: " + myTags + "\n\n");
+                                    
+                                }
+                            } finally {
+                                cursor.close();
+                            }
+
+}
+
 
     /**
      * @param args the command line arguments
