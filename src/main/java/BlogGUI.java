@@ -17,13 +17,20 @@ Users “walls”
  *
  * @author Que
  */
+import com.mongodb.client.MongoCursor;
+import static com.mongodb.client.model.Filters.*;
+import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Updates.*;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import com.mongodb.MongoClientURI;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import com.mongodb.Block;
 
 public class BlogGUI extends javax.swing.JFrame {
 
@@ -205,33 +212,38 @@ public class BlogGUI extends javax.swing.JFrame {
 
                             //add tags
                             do {
-                             
 
                                 String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
                                 if (tags.startsWith("y")) {
                                     String tag2 = JOptionPane.showInputDialog("Enter tag: ");
                                     tagList.add(tag2);
                                 } else {
-                                     menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.Search by tags"
-                            + "\n3.View all Posts"
-                            + "\n4.View user wall\n\n");
-                             selection = Integer.parseInt(menu);
+                                    menu = JOptionPane.showInputDialog("\nMENU"
+                                            + "\n1.Create New Post"
+                                            + "\n2.Search by tags"
+                                            + "\n3.View all Posts"
+                                            + "\n4.View user wall\n\n");
+                                    selection = Integer.parseInt(menu);
                                     activeUser.createPost(title, activeUser.getUsername(), body,
-                                    "4-55-2019", 0, commentList, tagList);
-                                
+                                            "4-55-2019", 0, commentList, tagList);
+
                                 }
                                 break;
                             } while (true);
 
-                          
-                            
-                           
                         case 2://search by tags
 
                             break;
                         case 3://View all posts
+                            //find all documents in collection
+                            MongoCursor<Document> cursor = userCollection.find().iterator();
+                            try {
+                                while (cursor.hasNext()) {
+                                    System.out.println(cursor.next().toJson());
+                                }
+                            } finally {
+                                cursor.close();
+                            }
 
                             break;
                         case 4://View User wall
