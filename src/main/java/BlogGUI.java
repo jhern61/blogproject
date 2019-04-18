@@ -262,6 +262,7 @@ public class BlogGUI extends javax.swing.JFrame {
                             }
 
                             break;
+                            
                         case 4://View User wall
                             textArea.append(activeUser.getMyPosts());
 
@@ -300,6 +301,8 @@ public class BlogGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         textArea.setText("");
     }//GEN-LAST:event_clearButtonActionPerformed
+    
+    
 
     /**
      * @param args the command line arguments
