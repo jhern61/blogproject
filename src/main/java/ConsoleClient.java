@@ -2,8 +2,10 @@
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -14,12 +16,13 @@ public class ConsoleClient {
 
     private static Scanner scanner = new Scanner(System.in);
     ArrayList globalPost = new ArrayList<Post>();
-
+    ArrayList globalUsers = new ArrayList<User>();
 
     public static void main(String[] args) {
 
+
         //Enable MongoDB logging.
-        Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+        Logger mongoLogger = Logger.getLogger("org.mongodb.driver");
         mongoLogger.setLevel(Level.SEVERE); // e.g. or Log.WARNING, etc.
         //Database Connection to Atlas
         MongoClientURI uri = new MongoClientURI(
@@ -33,13 +36,6 @@ public class ConsoleClient {
         MongoCollection<Document> userCollection = database.getCollection("User");
 
 
-
-
-
-
-
-
-
         //Variables
         boolean flag = true;
         User activeUser = new User("test", "password");
@@ -51,113 +47,114 @@ public class ConsoleClient {
 
 
         while (flag) {
-        switch (userCommand) {
-            //Login
-            case 1:
-                System.out.println("\nWelcome, " + activeUser.getUsername());
+            switch (userCommand) {
+                //Login
+                case 1:
+                    System.out.println("\nWelcome, " + activeUser.getUsername());
 
 
-                //Show login menu
-                loginMenu();
-                System.out.print("\nEnter command: ");
-                userCommand = scanner.nextInt();
+                    //Show login menu
+                    loginMenu();
+                    System.out.print("\nEnter command: ");
+                    userCommand = scanner.nextInt();
 
 
+                    break;
 
-                break;
+                //Register
+                case 2:
 
-            //Register
-            case 2:
+                    //Go to homePage
+                    System.out.println("\n ----- Registration Menu -----");
+                    System.out.print("\nCreate Username: ");
+                    String username = scanner.next();
 
-                //Go to homePage
-                System.out.println("\n ----- Registration Menu -----");
-                System.out.print("\nCreate Username: ");
-                String username = scanner.next();
+                    System.out.print("Create Password: ");
+                    String password = scanner.next();
 
-                System.out.print("Create Password: ");
-                String password = scanner.next();
+                    activeUser.register(username, password);
 
-                activeUser.register(username, password);
+                    System.out.println("\nAccount Created!");
 
-                System.out.println("\nAccount Created!");
-
-                //Show login menu
-                loginMenu();
-                System.out.print("\nEnter command: ");
-                userCommand = scanner.nextInt();
-
+                    //Show login menu
+                    loginMenu();
+                    System.out.print("\nEnter command: ");
+                    userCommand = scanner.nextInt();
 
 
-                break;
+                    break;
 
-            //Create post
-            case 3:
+                //Create post
+                case 3:
 
-                System.out.print("\nEnter title: ");
-                String title = scanner.next();
+                    System.out.print("\nEnter title: ");
+                    String title = scanner.next();
 
-                System.out.print("\nEnter body: ");
-                String body = scanner.next();
+                    System.out.print("\nEnter body: ");
+                    String body = scanner.next();
 
-                //add tags
-                System.out.print("\nAdd tags");
-
-
-                ArrayList tagList = new ArrayList<String>();
-                ArrayList commentList = new ArrayList<String>();
-
-                do {
-
-                    System.out.println("Do you want to add tags to your post? (y/n)");
-                    if (scanner.next().startsWith("y")) {
-                        System.out.println("Enter tag: ");
-                        tagList.add(scanner.next());
-                    } else {
-                        break;
-                    }
-                } while (true);
-
-                commentList.add("this is a comment");
+                    //add tags
+                    System.out.print("\nAdd tags");
 
 
-                activeUser.createPost(title, activeUser.getUsername(), body, "null", 0, commentList, tagList);
+                    ArrayList tagList = new ArrayList<String>();
+                    ArrayList commentList = new ArrayList<String>();
 
-                //Show login menu
-                loginMenu();
-                System.out.print("\nEnter command: ");
-                userCommand = scanner.nextInt();
+                    do {
 
-                break;
+                        System.out.println("Do you want to add tags to your post? (y/n)");
+                        if (scanner.next().startsWith("y")) {
+                            System.out.println("Enter tag: ");
+                            tagList.add(scanner.next());
+                        } else {
+                            break;
+                        }
+                    } while (true);
 
-            //Print my posts
-            case 4:
+                    commentList.add("this is a comment");
 
-                System.out.println(activeUser.getMyPosts());
 
-                //Show login menu
-                loginMenu();
-                System.out.print("\nEnter command: ");
-                userCommand = scanner.nextInt();
+                    activeUser.createPost(title, activeUser.getUsername(), body, "null", 0, commentList, tagList);
 
-                break;
+                    //Show login menu
+                    loginMenu();
+                    System.out.print("\nEnter command: ");
+                    userCommand = scanner.nextInt();
 
-            case 10:
+                    break;
 
-                //System.out.println(activeUser.loadFromDatabase());
-                loadFromDatabase(database, postCollection);
+                //Print my posts
+                case 4:
 
-                //Show login menu
-                loginMenu();
-                System.out.print("\nEnter command: ");
-                userCommand = scanner.nextInt();
+                    System.out.println(activeUser.getMyPosts());
 
-                break;
+                    //Show login menu
+                    loginMenu();
+                    System.out.print("\nEnter command: ");
+                    userCommand = scanner.nextInt();
 
-            default:
-                System.out.println("Invalid command");
+                    break;
 
+                case 10:
+
+                    //System.out.println(activeUser.loadFromDatabase());
+
+                    loadFromUserCollection(userCollection);
+
+                    loadFromPostCollection(postCollection);
+
+
+                    //Show login menu
+                    loginMenu();
+                    System.out.print("\nEnter command: ");
+                    userCommand = scanner.nextInt();
+
+                    break;
+
+                default:
+                    System.out.println("Invalid command");
+            }
         }
-    }
 
 
     }//end while loop
@@ -169,12 +166,8 @@ public class ConsoleClient {
                 "\n3 - Create Post " +
                 "\n4 - My Post" +
                 "\n5 - Global Posts" +
-                "\n6 - Exit" );
-
-
-
+                "\n6 - Exit");
     }
-
 
 
     public static void alreadyLoggedInMenu() {
@@ -182,32 +175,94 @@ public class ConsoleClient {
                 "\n3 - Create " +
                 "\n4 - My Posts" +
                 "\n5 - Global Post " +
-                "\n6 - Exit" );
+                "\n6 - Exit");
     }
 
 
-
-
-    public static void loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
-        //ArrayList<Post> loadedPost = new ArrayList<Post>();
-
-
-        //Print all.
-        for (Object cur : postCollection.find()) {
-            System.out.println(cur.toString());
-                //String post = database.getCollection("Blog");
-                //globalPost.add(post);
-        }
-//        for (int i = 0; i <loadedPost.size() ; i++) {
-//            loadedPost.get(i);
+//    public static void loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
+//        //ArrayList<Post> loadedPost = new ArrayList<Post>();
+//
+//
+//        //Print all.
+//        for (Object cur : postCollection.find()) {
+//            System.out.println(cur.toString());
+//            //String post = database.getCollection("Blog");
+//            //globalPost.add(post);
 //        }
+////        for (int i = 0; i <loadedPost.size() ; i++) {
+////            loadedPost.get(i);
+////        }
+//
+//    }
+//
+////   public static void loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
+////        //ArrayList<Post> loadedPost = new ArrayList<Post>();
+////
+////        //Print all.
+////        for (Object cur : postCollection.find()) {
+////            System.out.println(cur.toString());
+////        }
+////    }
 
+    public static void loadFromPostCollection(MongoCollection postCollection) {
+        MongoCursor<Document> cursor = postCollection.find().iterator();
+
+
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String myTitle = (String) myObj.get("title");
+                String myAuthor = (String) myObj.get("author");
+                String myBody = (String) myObj.get("postBody");
+                String myDate = (String) myObj.get("postDate");
+                Object myViews = myObj.get("views");
+                ArrayList myComments = (ArrayList) myObj.get("comments");
+                ArrayList myTags = (ArrayList) myObj.get("tags");
+
+                //Post post = new Post(myTitle,myAuthor,myBody,myDate,(Integer)myViews, myComments,myTags);
+
+                //INSERT INTO GLOBAL LIST OF ALL POST.
+                //globalPost.add(post);
+
+                System.out.println("\nTitle: " + myTitle + "\n"
+                        + "Author: " + myAuthor + "\n"
+                        + "Body: " + myBody + "\n"
+                        + "Date: " + myDate + "\n"
+                        + "Views: " + myViews + "\n"
+                        + "Comments: " + myComments + "\n"
+                        + "Tags: " + myTags + "\n\n");
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
+    public static void loadFromUserCollection(MongoCollection userCollection) {
+        MongoCursor<Document> cursor = userCollection.find().iterator();
+
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String username = (String) myObj.get("userName");
+                String password = (String) myObj.get("password");
+                ArrayList posts = (ArrayList) myObj.get("posts");
 
 
+                User loadedUser = new User(username, password, posts);
 
-}
+                //globalUsers.add(loadedUser);
+
+
+                System.out.println("\nUsername: " + username + "\n"
+                        + "Password: " + password);
+
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+}//end class
 
 
 

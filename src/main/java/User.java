@@ -32,6 +32,12 @@ public class User {
         this.username = username;
     }
 
+
+    public User(String username, String password, ArrayList post) {
+        this.password = password;
+        this.username = username;
+    }
+
     public User() {
     }
 
@@ -54,26 +60,21 @@ public class User {
     }
 
 
-    public ArrayList<Post> loadFromDatabase() {
-        ArrayList<Post> loadedPost = new ArrayList<Post>();
-
-
-        //Print all.
-        for (Document cur : postCollection.find()) {
-            System.out.println(cur.toJson());
-
-            // String post = database.getCollection("Blog");
-
-            // loadedPost.add(post);
-        }
-
-//        for (int i = 0; i <loadedPost.size() ; i++) {
-//            loadedPost.get(i);
+//    public ArrayList<Post> loadFromDatabase() {
+//        ArrayList<Post> loadedPost = new ArrayList<Post>();
+//
+//
+//        Print all.
+//        for (Document cur : postCollection.find()) {
+//            System.out.println(cur.toJson());
+//             String post = database.getCollection("Blog");
+//             loadedPost.add(post);
 //        }
-        return loadedPost;
-
-
-    }
+////        for (int i = 0; i <loadedPost.size() ; i++) {
+////            loadedPost.get(i);
+////        }
+//        return loadedPost;
+//    }
 
 
     public Post createPost(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags) {
@@ -98,6 +99,7 @@ public class User {
         //Return created post.
         return post;
     }
+
 
 
 
