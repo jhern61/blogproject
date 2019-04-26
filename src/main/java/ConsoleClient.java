@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class ConsoleClient {
 
     private static Scanner scanner = new Scanner(System.in);
-    ArrayList globalPost = new ArrayList<Post>();
+    static ArrayList globalPost = new ArrayList<Post>();
     ArrayList globalUsers = new ArrayList<User>();
 
     public static void main(String[] args) {
@@ -113,7 +113,6 @@ public class ConsoleClient {
 
                     commentList.add("this is a comment");
 
-
                     activeUser.createPost(title, activeUser.getUsername(), body, "null", 0, commentList, tagList);
 
                     //Show login menu
@@ -138,11 +137,8 @@ public class ConsoleClient {
                 case 10:
 
                     //System.out.println(activeUser.loadFromDatabase());
-
-                    loadFromUserCollection(userCollection);
-
+                    //loadFromUserCollection(userCollection);
                     loadFromPostCollection(postCollection);
-
 
                     //Show login menu
                     loginMenu();
@@ -178,36 +174,10 @@ public class ConsoleClient {
                 "\n6 - Exit");
     }
 
-
-//    public static void loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
-//        //ArrayList<Post> loadedPost = new ArrayList<Post>();
-//
-//
-//        //Print all.
-//        for (Object cur : postCollection.find()) {
-//            System.out.println(cur.toString());
-//            //String post = database.getCollection("Blog");
-//            //globalPost.add(post);
-//        }
-////        for (int i = 0; i <loadedPost.size() ; i++) {
-////            loadedPost.get(i);
-////        }
-//
-//    }
-//
-////   public static void loadFromDatabase(MongoDatabase database, MongoCollection postCollection) {
-////        //ArrayList<Post> loadedPost = new ArrayList<Post>();
-////
-////        //Print all.
-////        for (Object cur : postCollection.find()) {
-////            System.out.println(cur.toString());
-////        }
-////    }
+    
 
     public static void loadFromPostCollection(MongoCollection postCollection) {
         MongoCursor<Document> cursor = postCollection.find().iterator();
-
-
         try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
@@ -219,43 +189,33 @@ public class ConsoleClient {
                 ArrayList myComments = (ArrayList) myObj.get("comments");
                 ArrayList myTags = (ArrayList) myObj.get("tags");
 
-                //Post post = new Post(myTitle,myAuthor,myBody,myDate,(Integer)myViews, myComments,myTags);
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
 
-                //INSERT INTO GLOBAL LIST OF ALL POST.
-                //globalPost.add(post);
+                //Insert post from database into a list so we can access post
 
-                System.out.println("\nTitle: " + myTitle + "\n"
-                        + "Author: " + myAuthor + "\n"
-                        + "Body: " + myBody + "\n"
-                        + "Date: " + myDate + "\n"
-                        + "Views: " + myViews + "\n"
-                        + "Comments: " + myComments + "\n"
-                        + "Tags: " + myTags + "\n\n");
+
+                System.out.println(post.toString());
             }
         } finally {
             cursor.close();
         }
     }
 
+
     public static void loadFromUserCollection(MongoCollection userCollection) {
         MongoCursor<Document> cursor = userCollection.find().iterator();
-
         try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
-                String username = (String) myObj.get("userName");
+                String username = (String) myObj.get("username");
                 String password = (String) myObj.get("password");
                 ArrayList posts = (ArrayList) myObj.get("posts");
 
-
                 User loadedUser = new User(username, password, posts);
 
-                //globalUsers.add(loadedUser);
+                //Insert user from database into a list so we can access users
 
-
-                System.out.println("\nUsername: " + username + "\n"
-                        + "Password: " + password);
-
+                System.out.println(loadedUser.toString());
             }
         } finally {
             cursor.close();
