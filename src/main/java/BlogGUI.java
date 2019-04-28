@@ -40,7 +40,9 @@ public class BlogGUI extends javax.swing.JFrame {
     private User activeUser = new User();
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
+    static ArrayList globalTags = new ArrayList<Post>();
     String menu;
+   
     //Enable MongoDB logging.
         Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
       
@@ -64,6 +66,7 @@ public class BlogGUI extends javax.swing.JFrame {
      */
     public BlogGUI() {
         initComponents();
+        logOutButton.setEnabled(false);
     }
 
     /**
@@ -179,6 +182,9 @@ public class BlogGUI extends javax.swing.JFrame {
         activeUser.setUsername(userName);
         String password = JOptionPane.showInputDialog("Enter a password: ");
         activeUser.setPassword(password);
+        //encrypt password/////////////////////
+        ///////////////////////
+        /////////////////////
 
         //register user to database
         activeUser.register(activeUser.getUsername(), activeUser.getPassword());
@@ -189,6 +195,9 @@ public class BlogGUI extends javax.swing.JFrame {
 
         /* Insert object into collection. */
         userCollection.insertOne(newUser);
+        
+        //add user into global user array
+        globalUsers.add(newUser);
 
         //output successful completion of registration notification
         JOptionPane.showMessageDialog(null, "User sucessfully registered! Please Log in");
@@ -199,7 +208,10 @@ public class BlogGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String login = JOptionPane.showInputDialog("Enter a user name: ");
         String loginPassword = JOptionPane.showInputDialog("Enter a password: ");
-            
+        
+        //decrypt password////////////////////
+        //////////////////////////
+        ///////////////
         
         
         try {
@@ -207,6 +219,7 @@ public class BlogGUI extends javax.swing.JFrame {
                 if(findUser(userCollection,login, loginPassword)== true){
                     
                     activeUser.setUsername(login);
+                   logOutButton.setEnabled(true);
                     
                     int selection;
                     String menu = JOptionPane.showInputDialog("\nMENU"
@@ -258,7 +271,8 @@ public class BlogGUI extends javax.swing.JFrame {
                           break;
                            
                         case 2://search by tags
-
+                        postTags(postCollection, "food");
+                       
                             break;
                         case 3://View all posts in Database
                             
@@ -296,6 +310,7 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         // TODO add your handling code here:
+       
         JOptionPane.showMessageDialog(null, "You have been logged out and the system will now close, GOOD BYE!");
         System.exit(0);
 
@@ -309,42 +324,8 @@ public class BlogGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         textArea.setText("");
     }//GEN-LAST:event_clearButtonActionPerformed
-    
-    public void viewPostsFromDB(){
-    //find all documents in collection
-                            MongoCursor<Document> cursor = postCollection.find().iterator();
-                            
-                            try {
-                                while (cursor.hasNext()) {
-                                    Document myObj = cursor.next();
-                                    String myTitle = (String) myObj.get("title");
-                                    String myAuthor = (String) myObj.get("author");
-                                    String myBody = (String) myObj.get("postBody");
-                                    String myDate = (String) myObj.get("postDate");
-                                    Object myViews = myObj.get("views");
-                                    ArrayList myComments = (ArrayList) myObj.get("comments");
-                                    ArrayList myTags = (ArrayList) myObj.get("tags");
-                                    
-                                    
-                                 
-                                    
-                                    textArea.append("Title: " + myTitle + "\n" 
-                                            + "Author: " + myAuthor + "\n"
-                                            + "Body: " + myBody + "\n"
-                                            + "Date: " + myDate + "\n"
-                                            + "Views: " + myViews + "\n"
-                                            + "Comments: " + myComments + "\n"
-                                            + "Tags: " + myTags + "\n\n");
-                                    
-                                }
-                            } finally {
-                                cursor.close();
-                            }
 
-}
-    
-    
-    
+    //Method to get all posts from all users
      public void loadFromPostCollection(MongoCollection postCollection) {
         MongoCursor<Document> cursor = postCollection.find().iterator();
         try {
@@ -372,7 +353,7 @@ public class BlogGUI extends javax.swing.JFrame {
         }
     }
 
-
+     /*
     public static void loadFromUserCollection(MongoCollection userCollection) {
         MongoCursor<Document> cursor = userCollection.find().iterator();
         try {
@@ -392,9 +373,10 @@ public class BlogGUI extends javax.swing.JFrame {
         } finally {
             cursor.close();
         }
-    }
+    }*/
     
-    
+   
+    //method to find users in database for log in button
    public static boolean findUser(MongoCollection userCollection, String login, String loginPassword) {
       MongoCursor<Document> cursor = userCollection.find().iterator();
         
@@ -421,6 +403,25 @@ public class BlogGUI extends javax.swing.JFrame {
       
      }
    
+   //method to search posts by tags
+   public void  postTags(MongoCollection postCollection, String tag){
+     MongoCursor<Document> cursor = postCollection.find().iterator();
+        
+        loadFromPostCollection(postCollection);
+        for(int i=0; i<globalPost.size(); i++){
+            Object post = globalPost.get(i);
+            Post temp = (Post) post;
+            if(temp.getTags().toString().equalsIgnoreCase(tag)){
+                textArea.append(temp.toString());
+            }
+        }
+     
+        
+ 
+   }
+   
+   
+   //method to show main menu
    public void menu(){
        menu = JOptionPane.showInputDialog("\nMENU"
                             + "\n1.Create New Post"
