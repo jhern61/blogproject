@@ -41,7 +41,6 @@ public class BlogGUI extends javax.swing.JFrame {
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
     String menu;
-    int selection;
     //Enable MongoDB logging.
         Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
       
@@ -201,14 +200,24 @@ public class BlogGUI extends javax.swing.JFrame {
         String login = JOptionPane.showInputDialog("Enter a user name: ");
         String loginPassword = JOptionPane.showInputDialog("Enter a password: ");
             
+        
+        
         try {
             
                 if(findUser(userCollection,login, loginPassword)== true){
-                
                     
-                   
-                   selection = menu(selection);
-                 
+                    activeUser.setUsername(login);
+                    
+                    int selection;
+                    String menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.Search by tags"
+                            + "\n3.View all Posts"
+                            + "\n4.View user wall\n\n");
+                    selection = Integer.parseInt(menu);
+                
+                    boolean flag = true;
+                    while(flag) {
                     switch (selection) {
                         case 1://create post
 
@@ -219,30 +228,48 @@ public class BlogGUI extends javax.swing.JFrame {
 
                             String body = JOptionPane.showInputDialog("Write post body: ");
                             
-                            String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
-                            //add tags
+                            
                             do {
+                                String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
+                                
+                                //add tags
                                 if (tags.startsWith("y")) {
                                     String tag2 = JOptionPane.showInputDialog("Enter tag: ");
                                     tagList.add(tag2);
                                 }
+                               
+                                 else {
+                                break;
+                        }
                              
-                            } while (!tags.startsWith("n"));
-                             if(tags.startsWith("n")){
-                                    menu(selection);
-                                    
-                              
-                                    activeUser.createPost(title, activeUser.getUsername(), body,
+                                
+                            } while (true);
+                            
+                            activeUser.createPost(title, activeUser.getUsername(), body,
                                             "4-55-2019", 0, commentList, tagList);
-                             }
-                                    break;
-
+                            
+                            menu = JOptionPane.showInputDialog("\nMENU"
+                                            + "\n1.Create New Post"
+                                            + "\n2.Search by tags"
+                                            + "\n3.View all Posts"
+                                            + "\n4.View user wall\n\n");
+                                    selection = Integer.parseInt(menu);
+                               
+                          break;
+                           
                         case 2://search by tags
 
                             break;
                         case 3://View all posts in Database
                             
                             loadFromPostCollection(postCollection);
+                            
+                            menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.Search by tags"
+                            + "\n3.View all Posts"
+                            + "\n4.View user wall\n\n");
+                    selection = Integer.parseInt(menu);
                             
                             break;
                             
@@ -254,6 +281,7 @@ public class BlogGUI extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "Sorry wrong input");
 
                     }//end switch statement 
+                }
                 }//end if 
                 if(findUser(userCollection,login, loginPassword)== false){
                     JOptionPane.showMessageDialog(null,"Wrong Username or Password");
@@ -393,14 +421,12 @@ public class BlogGUI extends javax.swing.JFrame {
       
      }
    
-   public int menu(int selection){
+   public void menu(){
        menu = JOptionPane.showInputDialog("\nMENU"
                             + "\n1.Create New Post"
                             + "\n2.Search by tags"
                             + "\n3.View all Posts"
                             + "\n4.View user wall\n\n");
-   
-   return selection;
    }
    
     /**
