@@ -16,7 +16,8 @@ public class ConsoleClient {
 
     private static Scanner scanner = new Scanner(System.in);
     static ArrayList globalPost = new ArrayList<Post>();
-    ArrayList globalUsers = new ArrayList<User>();
+    static ArrayList globalUsers = new ArrayList<User>();
+    static User activeUser = new User("test", "password");
 
     public static void main(String[] args) {
 
@@ -38,7 +39,7 @@ public class ConsoleClient {
 
         //Variables
         boolean flag = true;
-        User activeUser = new User("test", "password");
+
 
         //Show login menu
         loginMenu();
@@ -138,8 +139,9 @@ public class ConsoleClient {
 
                     //System.out.println(activeUser.loadFromDatabase());
                     //loadFromUserCollection(userCollection);
-                    loadFromPostCollection(postCollection);
-
+                   //loadFromPostCollection(postCollection);
+                   findUser(userCollection, "Dude9FIKA0", "gGgsZqwUyxrEXr/95i+4H9nDPbVyyUKL");
+                    
                     //Show login menu
                     loginMenu();
                     System.out.print("\nEnter command: ");
@@ -174,7 +176,6 @@ public class ConsoleClient {
                 "\n6 - Exit");
     }
 
-    
 
     public static void loadFromPostCollection(MongoCollection postCollection) {
         MongoCursor<Document> cursor = postCollection.find().iterator();
@@ -200,6 +201,32 @@ public class ConsoleClient {
             cursor.close();
         }
     }
+    
+    
+     public static String findUser(MongoCollection userCollection, String login, String loginPassword) {
+      MongoCursor<Document> cursor = userCollection.find().iterator();
+        
+      try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String username = (String) myObj.get("username");
+                String password = (String) myObj.get("password");
+               if(username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword) ){
+                   System.out.print("Valid userName");
+                   System.out.println("Valid password");
+               }
+              
+            }
+      }catch (NullPointerException e){
+          System.out.print("");
+          
+      }finally {
+            cursor.close();    
+
+      }
+      return login;
+      
+     }
 
 
     public static void loadFromUserCollection(MongoCollection userCollection) {
@@ -214,17 +241,22 @@ public class ConsoleClient {
                 User loadedUser = new User(username, password, posts);
 
                 //Insert user from database into a list so we can access users
-
+                globalUsers.add(loadedUser);
+                
                 System.out.println(loadedUser.toString());
             }
         } finally {
             cursor.close();
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }//end class
-
-
-
-
-

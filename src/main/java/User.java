@@ -60,21 +60,6 @@ public class User {
     }
 
 
-//    public ArrayList<Post> loadFromDatabase() {
-//        ArrayList<Post> loadedPost = new ArrayList<Post>();
-//
-//
-//        Print all.
-//        for (Document cur : postCollection.find()) {
-//            System.out.println(cur.toJson());
-//             String post = database.getCollection("Blog");
-//             loadedPost.add(post);
-//        }
-////        for (int i = 0; i <loadedPost.size() ; i++) {
-////            loadedPost.get(i);
-////        }
-//        return loadedPost;
-//    }
 
 
     public Post createPost(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags) {
@@ -109,7 +94,7 @@ public class User {
         Post post = new Post();
 
         if (myPosts.isEmpty()) {
-            System.out.println("null");
+            System.out.println("NO posts from this user");
         } else
             for (int i = 0; i < myPosts.size(); i++) {
                 System.out.println(myPosts.get(i));

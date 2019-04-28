@@ -38,7 +38,10 @@ import java.util.logging.Logger;
 public class BlogGUI extends javax.swing.JFrame {
 
     private User activeUser = new User();
-    
+    static ArrayList globalPost = new ArrayList<Post>();
+    static ArrayList globalUsers = new ArrayList<User>();
+    String menu;
+    int selection;
     //Enable MongoDB logging.
         Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
       
@@ -53,7 +56,6 @@ public class BlogGUI extends javax.swing.JFrame {
     //Connect to database.
     MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
 
-    ArrayList globalPost = new ArrayList<Post>();
 
     MongoCollection<Document> userCollection = database.getCollection("User");
     MongoCollection<Document> postCollection = database.getCollection("Blog");
@@ -198,22 +200,15 @@ public class BlogGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String login = JOptionPane.showInputDialog("Enter a user name: ");
         String loginPassword = JOptionPane.showInputDialog("Enter a password: ");
-
+            
         try {
-            //check to veryify the username is correct
-            if (activeUser.getUsername().equalsIgnoreCase(login)) {
-
-                //check to verify password is correct
-                if (activeUser.getPassword().equals(loginPassword)) {
-
-                    int selection;
-                    String menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.Search by tags"
-                            + "\n3.View all Posts"
-                            + "\n4.View user wall\n\n");
-                    selection = Integer.parseInt(menu);
-
+            
+                if(findUser(userCollection,login, loginPassword)== true){
+                
+                    
+                   
+                   selection = menu(selection);
+                 
                     switch (selection) {
                         case 1://create post
 
@@ -223,34 +218,31 @@ public class BlogGUI extends javax.swing.JFrame {
                             String title = JOptionPane.showInputDialog("Enter title of post: ");
 
                             String body = JOptionPane.showInputDialog("Write post body: ");
-
+                            
+                            String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
                             //add tags
                             do {
-
-                                String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
                                 if (tags.startsWith("y")) {
                                     String tag2 = JOptionPane.showInputDialog("Enter tag: ");
                                     tagList.add(tag2);
-                                } else {
-                                    menu = JOptionPane.showInputDialog("\nMENU"
-                                            + "\n1.Create New Post"
-                                            + "\n2.Search by tags"
-                                            + "\n3.View all Posts"
-                                            + "\n4.View user wall\n\n");
-                                    selection = Integer.parseInt(menu);
+                                }
+                             
+                            } while (!tags.startsWith("n"));
+                             if(tags.startsWith("n")){
+                                    menu(selection);
+                                    
+                              
                                     activeUser.createPost(title, activeUser.getUsername(), body,
                                             "4-55-2019", 0, commentList, tagList);
-
-                                }
-                                break;
-                            } while (true);
+                             }
+                                    break;
 
                         case 2://search by tags
 
                             break;
                         case 3://View all posts in Database
                             
-                            viewPostsFromDB();
+                            loadFromPostCollection(postCollection);
                             
                             break;
                             
@@ -261,18 +253,15 @@ public class BlogGUI extends javax.swing.JFrame {
                         default:
                             JOptionPane.showMessageDialog(null, "Sorry wrong input");
 
-                    }//end switch statement           
-                }//end password if statement
-            }//end username if statement
-
+                    }//end switch statement 
+                }//end if 
+                if(findUser(userCollection,login, loginPassword)== false){
+                    JOptionPane.showMessageDialog(null,"Wrong Username or Password");
+                }
+                
+          
         } catch (Exception e) {
-
-            if (!login.equals(activeUser.getUsername())) {
-                JOptionPane.showMessageDialog(null, "Sorry username is incorrect");
-            }
-            if (!loginPassword.equals(activeUser.getPassword())) {
-                JOptionPane.showMessageDialog(null, "Sorry password is incorrect");
-            }
+            
         }
 
     }//GEN-LAST:event_logInButtonActionPerformed
@@ -325,8 +314,95 @@ public class BlogGUI extends javax.swing.JFrame {
                             }
 
 }
+    
+    
+    
+     public void loadFromPostCollection(MongoCollection postCollection) {
+        MongoCursor<Document> cursor = postCollection.find().iterator();
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String myTitle = (String) myObj.get("title");
+                String myAuthor = (String) myObj.get("author");
+                String myBody = (String) myObj.get("postBody");
+                String myDate = (String) myObj.get("postDate");
+                Object myViews = myObj.get("views");
+                ArrayList myComments = (ArrayList) myObj.get("comments");
+                ArrayList myTags = (ArrayList) myObj.get("tags");
+
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
+
+                //Insert post from database into a list so we can access post
+                
+                //add post to global arrayist containing all posts 
+                globalPost.add(post);
+                
+                textArea.append(post.toString());
+            }
+        } finally {
+            cursor.close();
+        }
+    }
 
 
+    public static void loadFromUserCollection(MongoCollection userCollection) {
+        MongoCursor<Document> cursor = userCollection.find().iterator();
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String username = (String) myObj.get("username");
+                String password = (String) myObj.get("password");
+                ArrayList posts = (ArrayList) myObj.get("posts");
+
+                User loadedUser = new User(username, password, posts);
+
+                //Insert user from database into a list so we can access users
+                globalUsers.add(loadedUser);
+                
+                System.out.println(loadedUser.toString());
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    
+   public static boolean findUser(MongoCollection userCollection, String login, String loginPassword) {
+      MongoCursor<Document> cursor = userCollection.find().iterator();
+        
+      try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String username = (String) myObj.get("username");
+                String password = (String) myObj.get("password");
+               if(username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword) ){
+                   System.out.print("Valid userName");
+                   System.out.println("Valid password");
+                   return true;
+               }
+               
+            }
+      }catch (NullPointerException e){
+          System.out.print("");
+          
+      }finally {
+            cursor.close();    
+
+      }
+      return false;
+      
+     }
+   
+   public int menu(int selection){
+       menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.Search by tags"
+                            + "\n3.View all Posts"
+                            + "\n4.View user wall\n\n");
+   
+   return selection;
+   }
+   
     /**
      * @param args the command line arguments
      */
