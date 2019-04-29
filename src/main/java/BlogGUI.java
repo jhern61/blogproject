@@ -271,7 +271,18 @@ public class BlogGUI extends javax.swing.JFrame {
                           break;
                            
                         case 2://search by tags
-                        postTags(postCollection, "food");
+                        
+                        String tagSearch = JOptionPane.showInputDialog("Enter tag name");
+                        
+                        //method to retreive tags from database
+                        postTags(postCollection, tagSearch);
+                        
+                        menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.Search by tags"
+                            + "\n3.View all Posts"
+                            + "\n4.View user wall\n\n");
+                    selection = Integer.parseInt(menu);
                        
                             break;
                         case 3://View all posts in Database
@@ -386,8 +397,7 @@ public class BlogGUI extends javax.swing.JFrame {
                 String username = (String) myObj.get("username");
                 String password = (String) myObj.get("password");
                if(username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword) ){
-                   System.out.print("Valid userName");
-                   System.out.println("Valid password");
+                  
                    return true;
                }
                
@@ -407,14 +417,38 @@ public class BlogGUI extends javax.swing.JFrame {
    public void  postTags(MongoCollection postCollection, String tag){
      MongoCursor<Document> cursor = postCollection.find().iterator();
         
-        loadFromPostCollection(postCollection);
+     try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                ArrayList myTags = (ArrayList) myObj.get("tags");
+                for(int i=0; i<myTags.size(); i++){
+                    if(myTags.get(i).toString().equals(tag)){
+                       
+                        textArea.append(postCollection.find().toString());
+                        
+                        for (int x=0; x<globalPost.size(); x++) {
+                            textArea.append("second for loop");
+                            if(globalPost.contains(myTags)){
+                                textArea.append("Second if works");
+                                textArea.append(globalPost.toString());
+                            }   }
+                }
+                }
+            }
+            
+     }catch (Exception e){
+         
+     }
+                
+                
+       /*loadFromPostCollection(postCollection);
         for(int i=0; i<globalPost.size(); i++){
             Object post = globalPost.get(i);
             Post temp = (Post) post;
-            if(temp.getTags().toString().equalsIgnoreCase(tag)){
-                textArea.append(temp.toString());
+            if(temp.tags.contains(tag)){
+                textArea.append(temp.tags.toString());
             }
-        }
+        }*/
      
         
  
