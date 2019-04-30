@@ -420,20 +420,31 @@ public class BlogGUI extends javax.swing.JFrame {
      try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
+                String myTitle = (String) myObj.get("title");
+                String myAuthor = (String) myObj.get("author");
+                String myBody = (String) myObj.get("postBody");
+                String myDate = (String) myObj.get("postDate");
+                Object myViews = myObj.get("views");
+                ArrayList myComments = (ArrayList) myObj.get("comments");
                 ArrayList myTags = (ArrayList) myObj.get("tags");
-                for(int i=0; i<myTags.size(); i++){
-                    if(myTags.get(i).toString().equals(tag)){
+
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
+
+                //Insert post from database into a list so we can access post
+                
+                //add post to global arrayist containing all posts 
+                globalPost.add(post);
+                
+                for(int i=0; i<globalPost.size(); i++){
+                    
+                    for(int x=0; x<myTags.size(); x++){
+                        if(myTags.contains(tag))
                        
-                        textArea.append(postCollection.find().toString());
+                            textArea.append(post.toString());
+                            
                         
-                        for (int x=0; x<globalPost.size(); x++) {
-                            textArea.append("second for loop");
-                            if(globalPost.contains(myTags)){
-                                textArea.append("Second if works");
-                                textArea.append(globalPost.toString());
-                            }   }
-                }
-                }
+                }//end inner for loop
+                }//end for loop
             }
             
      }catch (Exception e){
