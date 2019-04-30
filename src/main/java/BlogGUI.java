@@ -67,6 +67,7 @@ public class BlogGUI extends javax.swing.JFrame {
     public BlogGUI() {
         initComponents();
         logOutButton.setEnabled(false);
+        tagsButton.setEnabled(false);
     }
 
     /**
@@ -220,6 +221,7 @@ public class BlogGUI extends javax.swing.JFrame {
                     
                     activeUser.setUsername(login);
                    logOutButton.setEnabled(true);
+                   tagsButton.setEnabled(true);
                     
                     int selection;
                     String menu = JOptionPane.showInputDialog("\nMENU"
@@ -329,6 +331,10 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void tagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tagsButtonActionPerformed
         // TODO add your handling code here:
+                        String tagSearch = JOptionPane.showInputDialog("Enter tag name");
+                        
+                        //method to retreive tags from database
+                        postTags(postCollection, tagSearch);
     }//GEN-LAST:event_tagsButtonActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
@@ -439,7 +445,7 @@ public class BlogGUI extends javax.swing.JFrame {
                     
                     for(int x=0; x<myTags.size(); x++){
                         if(myTags.contains(tag))
-                       
+                          
                             textArea.append(post.toString());
                             
                         
@@ -497,5 +503,6 @@ public class BlogGUI extends javax.swing.JFrame {
     private javax.swing.JButton registerButton;
     private javax.swing.JButton tagsButton;
     private javax.swing.JTextArea textArea;
+    
     // End of variables declaration//GEN-END:variables
 }
