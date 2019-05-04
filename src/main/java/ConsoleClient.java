@@ -162,6 +162,34 @@ public class ConsoleClient {
                         }
 
 
+                        viewPostMenu();
+                        int menuCommand = scanner.nextInt();
+                        switch(menuCommand) {
+
+                            case 1:
+                                break;
+
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                break;
+                            case 5:
+
+                                System.out.println("LEAVING GLOBAL POSTS....");
+
+                                //Show login menu
+                                viewPostMenu();
+                                System.out.print("\nEnter command: ");
+                                userCommand = scanner.nextInt();
+                                viewFlag = false;
+
+                                break;
+
+                        }
+
+
                     }
 
 
@@ -220,12 +248,12 @@ public class ConsoleClient {
 
 
     public static void viewPostMenu() {
-        System.out.println("\n----------Post Menu ----------------\n" +
-                "\n11 - Like " +
-                "\n12 - Comment" +
-                "\n13 - Next post " +
-                "\n14 - Last post  " +
-                "\n15 - Leave Global posts");
+        System.out.println("----------Options----------------\n" +
+                "\n1 - Like " +
+                "\n2 - Comment" +
+                "\n3 - Next post " +
+                "\n4 - Last post  " +
+                "\n5 - Exit Global posts");
     }
 
 
