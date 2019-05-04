@@ -42,7 +42,6 @@ public class BlogGUI extends javax.swing.JFrame {
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
     static ArrayList globalTags = new ArrayList<Post>();
-    String menu;
     
     
    //Enable MongoDB logging.
@@ -69,6 +68,9 @@ public class BlogGUI extends javax.swing.JFrame {
         initComponents();
         logOutButton.setEnabled(false);
         tagsButton.setEnabled(false);
+        menuButton.setEnabled(false);
+        likeButton.setEnabled(false);
+        commentPost.setEnabled(false);
     }
 
     /**
@@ -255,97 +257,14 @@ public class BlogGUI extends javax.swing.JFrame {
             
                 if(findUser(userCollection,login, loginPassword)== true){
                     
-                    activeUser.setUsername(login);
+                   activeUser.setUsername(login);
                    logOutButton.setEnabled(true);
                    tagsButton.setEnabled(true);
-                    
-                    int selection;
-                    String menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.Search by tags"
-                            + "\n3.View all Posts"
-                            + "\n4.View user wall\n\n");
-                    selection = Integer.parseInt(menu);
-                
-                    boolean flag = true;
-                    while(flag) {
-                    switch (selection) {
-                        case 1://create post
-
-                            ArrayList tagList = new ArrayList<String>();
-                            ArrayList commentList = new ArrayList<String>();
-
-                            String title = JOptionPane.showInputDialog("Enter title of post: ");
-
-                            String body = JOptionPane.showInputDialog("Write post body: ");
-                            
-                            
-                            do {
-                                String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
-                                
-                                //add tags
-                                if (tags.startsWith("y")) {
-                                    String tag2 = JOptionPane.showInputDialog("Enter tag: ");
-                                    tagList.add(tag2);
-                                }
-                               
-                                 else {
-                                break;
-                        }
-                             
-                                
-                            } while (true);
-                            
-                            activeUser.createPost(title, activeUser.getUsername(), body,
-                                            "4-55-2019", 0, commentList, tagList);
-                            
-                            menu = JOptionPane.showInputDialog("\nMENU"
-                                            + "\n1.Create New Post"
-                                            + "\n2.Search by tags"
-                                            + "\n3.View all Posts"
-                                            + "\n4.View user wall\n\n");
-                                    selection = Integer.parseInt(menu);
-                               
-                          break;
-                           
-                        case 2://search by tags
-                        
-                        String tagSearch = JOptionPane.showInputDialog("Enter tag name");
-                        
-                        //method to retreive tags from database
-                        postTags(postCollection, tagSearch);
-                        
-                        menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.Search by tags"
-                            + "\n3.View all Posts"
-                            + "\n4.View user wall\n\n");
-                    selection = Integer.parseInt(menu);
-                       
-                            break;
-                        case 3://View all posts in Database
-                            
-                            loadFromPostCollection(postCollection);
-                            
-                            menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.Search by tags"
-                            + "\n3.View all Posts"
-                            + "\n4.View user wall\n\n");
-                    selection = Integer.parseInt(menu);
-                            
-                            break;
-                            
-                        case 4://View User wall
-                            textArea.append(activeUser.getMyPosts());
-
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Sorry wrong input");
-
-                    }//end switch statement 
-                }
+                   menuButton.setEnabled(true);
+                   
+                   JOptionPane.showMessageDialog(null,"Sucessfuly Logged in"); 
                 }//end if 
+                
                 if(findUser(userCollection,login, loginPassword)== false){
                     JOptionPane.showMessageDialog(null,"Wrong Username or Password");
                 }
@@ -382,10 +301,81 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
+                  
+               try{ 
+                   activeUser.getUsername();
+                   activeUser.getPassword();
+                    String menu;
+                   int selection;
+                        
+                        menu = JOptionPane.showInputDialog("\nMENU"
+                            + "\n1.Create New Post"
+                            + "\n2.View all Posts"
+                            + "\n3.View user wall\n\n");
+                    selection = Integer.parseInt(menu);
+                
+                    boolean flag = true;
+                    while(flag) {
+                    switch (selection) {
+                        case 1://create post
+
+                            ArrayList tagList = new ArrayList<String>();
+                            ArrayList commentList = new ArrayList<String>();
+
+                            String title = JOptionPane.showInputDialog("Enter title of post: ");
+
+                            String body = JOptionPane.showInputDialog("Write post body: ");
+                            
+                            
+                            do {
+                                String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
+                                
+                                //add tags
+                                if (tags.startsWith("y")) {
+                                    String tag2 = JOptionPane.showInputDialog("Enter tag: ");
+                                    tagList.add(tag2);
+                                }
+                               
+                                 else {
+                                break;
+                        }
+                             
+                                
+                            } while (true);
+                            
+                            activeUser.createPost(title, activeUser.getUsername(), body,
+                                            "4-55-2019", 0, commentList, tagList);
+                            
+                          break;
+                     
+                        case 2://View all posts in Database
+                            
+                            loadFromPostCollection(postCollection);
+                            
+                            //enable like and comment buttons
+                            likeButton.setEnabled(true);
+                            commentPost.setEnabled(true);
+                            
+                            break;
+                            
+                        case 3://View User wall
+                            textArea.append(activeUser.getMyPosts());
+
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(null, "Sorry wrong input");
+
+                    }//end switch statement 
+                
+                    }
+        }catch (Exception e) {
+            
+        }
     }//GEN-LAST:event_menuButtonActionPerformed
 
     private void likeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_likeButtonActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_likeButtonActionPerformed
 
     private void commentPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commentPostActionPerformed
@@ -519,16 +509,6 @@ public class BlogGUI extends javax.swing.JFrame {
      
         
  
-   }
-   
-   
-   //method to show main menu
-   public void menu(){
-       menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.Search by tags"
-                            + "\n3.View all Posts"
-                            + "\n4.View user wall\n\n");
    }
    
     /**
