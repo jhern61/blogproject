@@ -18,6 +18,8 @@ public class ConsoleClient {
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
     static User activeUser = new User("test", "password");
+    static int index = 0;
+
 
     public static void main(String[] args) {
 
@@ -141,58 +143,44 @@ public class ConsoleClient {
                     loadFromPostCollection(postCollection);
 
                     boolean viewFlag = true;
-                    while(viewFlag = true) {
-
+                    while (viewFlag = true) {
 
                         System.out.println(globalPost.get(0).toString());
-                        viewPostMenu();
-                        String postViewInput = scanner.next();
-                        int index = 1;
-
-                        if (postViewInput.equalsIgnoreCase("n")) {
-                                System.out.println(globalPost.get(index).toString());
-                            index++;
-
-                        } else  if (postViewInput.equalsIgnoreCase("b")){
-                            System.out.println(globalPost.get(index).toString());
-                            index--;
-                        } else {
-                            System.out.println("Invalid input");
-
-                        }
-
 
                         viewPostMenu();
                         int menuCommand = scanner.nextInt();
-                        switch(menuCommand) {
-
+                        switch (menuCommand) {
+                            //Like Post
                             case 1:
                                 break;
 
+                            //Add comment to post
                             case 2:
                                 break;
+
+                            //Next Post
                             case 3:
+                                System.out.println(globalPost.get(index).toString());
+                                index++;
                                 break;
+
+                            //Last Post
                             case 4:
+                                System.out.println(globalPost.get(index).toString());
+                                index--;
                                 break;
+
+                            //Exit
                             case 5:
 
                                 System.out.println("LEAVING GLOBAL POSTS....");
-
-                                //Show login menu
-                                viewPostMenu();
-                                System.out.print("\nEnter command: ");
-                                userCommand = scanner.nextInt();
                                 viewFlag = false;
-
                                 break;
 
                         }
 
 
                     }
-
-
 
 
                     //Show login menu
@@ -205,9 +193,9 @@ public class ConsoleClient {
                 case 6:
 
                     ArrayList<Post> tagPosts = new ArrayList<Post>();
-                   // tagPosts =  postWithTag(postCollection, "food");
+                    // tagPosts =  postWithTag(postCollection, "food");
 
-                    for (int i = 0; i <tagPosts.size() ; i++) {
+                    for (int i = 0; i < tagPosts.size(); i++) {
                         System.out.println(tagPosts.get(i).toString());
                     }
 
@@ -275,7 +263,7 @@ public class ConsoleClient {
                 //Insert post from database into a list so we can access post
                 globalPost.add(post);
 
-               // System.out.println(post.toString());
+                // System.out.println(post.toString());
             }
         } finally {
             cursor.close();
