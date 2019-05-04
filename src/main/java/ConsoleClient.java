@@ -59,7 +59,6 @@ public class ConsoleClient {
                     System.out.print("\nEnter command: ");
                     userCommand = scanner.nextInt();
 
-
                     break;
 
                 //Register
@@ -135,13 +134,65 @@ public class ConsoleClient {
 
                     break;
 
+                //Print all posts
+                case 5:
+
+                    //Press 'a' to go back 'd' to go next
+                    loadFromPostCollection(postCollection);
+
+                    boolean viewFlag = true;
+                    while(viewFlag = true) {
+
+
+                        System.out.println(globalPost.get(0).toString());
+                        viewPostMenu();
+                        String postViewInput = scanner.next();
+                        int index = 1;
+
+                        if (postViewInput.equalsIgnoreCase("n")) {
+                                System.out.println(globalPost.get(index).toString());
+                            index++;
+
+                        } else  if (postViewInput.equalsIgnoreCase("b")){
+                            System.out.println(globalPost.get(index).toString());
+                            index--;
+                        } else {
+                            System.out.println("Invalid input");
+
+                        }
+
+
+                    }
+
+
+
+
+                    //Show login menu
+                    loginMenu();
+                    System.out.print("\nEnter command: ");
+                    userCommand = scanner.nextInt();
+                    break;
+
+
+                case 6:
+
+                    ArrayList<Post> tagPosts = new ArrayList<Post>();
+                   // tagPosts =  postWithTag(postCollection, "food");
+
+                    for (int i = 0; i <tagPosts.size() ; i++) {
+                        System.out.println(tagPosts.get(i).toString());
+                    }
+
+                    break;
+
+
                 case 10:
 
                     //System.out.println(activeUser.loadFromDatabase());
                     //loadFromUserCollection(userCollection);
-                   //loadFromPostCollection(postCollection);
-                   findUser(userCollection, "Dude9FIKA0", "gGgsZqwUyxrEXr/95i+4H9nDPbVyyUKL");
-                    
+                    //loadFromPostCollection(postCollection);
+                    findUser(userCollection, "Dude9FIKA0", "gGgsZqwUyxrEXr/95i+4H9nDPbVyyUKL");
+
                     //Show login menu
                     loginMenu();
                     System.out.print("\nEnter command: ");
@@ -168,12 +219,13 @@ public class ConsoleClient {
     }
 
 
-    public static void alreadyLoggedInMenu() {
-        System.out.println("\n----------Welcome ----------------\n" +
-                "\n3 - Create " +
-                "\n4 - My Posts" +
-                "\n5 - Global Post " +
-                "\n6 - Exit");
+    public static void viewPostMenu() {
+        System.out.println("\n----------Post Menu ----------------\n" +
+                "\n11 - Like " +
+                "\n12 - Comment" +
+                "\n13 - Next post " +
+                "\n14 - Last post  " +
+                "\n15 - Leave Global posts");
     }
 
 
@@ -193,40 +245,53 @@ public class ConsoleClient {
                 Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
 
                 //Insert post from database into a list so we can access post
+                globalPost.add(post);
 
-
-                System.out.println(post.toString());
+               // System.out.println(post.toString());
             }
         } finally {
             cursor.close();
         }
     }
-    
-    
-     public static String findUser(MongoCollection userCollection, String login, String loginPassword) {
-      MongoCursor<Document> cursor = userCollection.find().iterator();
-        
-      try {
+
+
+    public static String findUser(MongoCollection userCollection, String login, String loginPassword) {
+        MongoCursor<Document> cursor = userCollection.find().iterator();
+
+        try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
                 String username = (String) myObj.get("username");
                 String password = (String) myObj.get("password");
-               if(username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword) ){
-                   System.out.print("Valid userName");
-                   System.out.println("Valid password");
-               }
-              
-            }
-      }catch (NullPointerException e){
-          System.out.print("");
-          
-      }finally {
-            cursor.close();    
+                if (username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword)) {
+                    System.out.print("Valid userName");
+                    System.out.println("Valid password");
+                }
 
-      }
-      return login;
-      
-     }
+            }
+        } catch (NullPointerException e) {
+            System.out.print("");
+
+        } finally {
+            cursor.close();
+
+        }
+        return login;
+
+    }
+
+//    public static ArrayList<Post> postWithTag(MongoCollection postCollection, String tag){
+//        loadFromPostCollection(postCollection);
+//        ArrayList<Post> tagPosts = new ArrayList<Post>();
+//
+//        for (int i = 0; i <globalPost.size() ; i++) {
+//            if(globalPost.get(i).toString() == tag.toString()) {
+//                System.out.println(globalPost.get(i).toString());
+//                tagPosts.add(globalPost.add(i));
+//            }
+//        }
+//        return
+//    }
 
 
     public static void loadFromUserCollection(MongoCollection userCollection) {
@@ -242,21 +307,13 @@ public class ConsoleClient {
 
                 //Insert user from database into a list so we can access users
                 globalUsers.add(loadedUser);
-                
+
                 System.out.println(loadedUser.toString());
             }
         } finally {
             cursor.close();
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 
 }//end class
