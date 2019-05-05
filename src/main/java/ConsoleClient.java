@@ -143,19 +143,37 @@ public class ConsoleClient {
                     loadFromPostCollection(postCollection);
 
                     boolean viewFlag = true;
-                    while (viewFlag = true) {
+                    while (viewFlag) {
 
                         System.out.println(globalPost.get(0).toString());
+                        //Get each post from global list
+                        for (int i = 0; i <globalPost.size() ; i++) {
+                           Post post = new Post();
+                           post = globalPost.get(i);
+
+                        }
 
                         viewPostMenu();
                         int menuCommand = scanner.nextInt();
                         switch (menuCommand) {
                             //Like Post
                             case 1:
+
+
+                                //Show menu
+                                viewPostMenu();
+                                System.out.print("\n Enter Command: ");
+                                menuCommand = scanner.nextInt();
                                 break;
 
                             //Add comment to post
                             case 2:
+
+
+                                System.out.print("\nEnter comment: ");
+                                String comment = scanner.next();
+
+
                                 break;
 
                             //Next Post
@@ -236,7 +254,7 @@ public class ConsoleClient {
 
 
     public static void viewPostMenu() {
-        System.out.println("----------Options----------------\n" +
+        System.out.println("---------- Post Options ----------------\n" +
                 "\n1 - Like " +
                 "\n2 - Comment" +
                 "\n3 - Next post " +
@@ -244,6 +262,31 @@ public class ConsoleClient {
                 "\n5 - Exit Global posts");
     }
 
+
+//    public static void loadFromPostCollection(MongoCollection postCollection) {
+//        MongoCursor<Document> cursor = postCollection.find().iterator();
+//        try {
+//            while (cursor.hasNext()) {
+//                Document myObj = cursor.next();
+//                String myTitle = (String) myObj.get("title");
+//                String myAuthor = (String) myObj.get("author");
+//                String myBody = (String) myObj.get("postBody");
+//                String myDate = (String) myObj.get("postDate");
+//                Object myViews = myObj.get("views");
+//                ArrayList myComments = (ArrayList) myObj.get("comments");
+//                ArrayList myTags = (ArrayList) myObj.get("tags");
+//
+//                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
+//
+//                //Insert post from database into a list so we can access post
+//                globalPost.add(post);
+//
+//                // System.out.println(post.toString());
+//            }
+//        } finally {
+//            cursor.close();
+//        }
+//}
 
     public static void loadFromPostCollection(MongoCollection postCollection) {
         MongoCursor<Document> cursor = postCollection.find().iterator();
@@ -254,7 +297,7 @@ public class ConsoleClient {
                 String myAuthor = (String) myObj.get("author");
                 String myBody = (String) myObj.get("postBody");
                 String myDate = (String) myObj.get("postDate");
-                Object myViews = myObj.get("views");
+                int myViews = (Integer) myObj.get("views");
                 ArrayList myComments = (ArrayList) myObj.get("comments");
                 ArrayList myTags = (ArrayList) myObj.get("tags");
 
@@ -268,8 +311,8 @@ public class ConsoleClient {
         } finally {
             cursor.close();
         }
-    }
 
+    }
 
     public static String findUser(MongoCollection userCollection, String login, String loginPassword) {
         MongoCursor<Document> cursor = userCollection.find().iterator();
