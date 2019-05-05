@@ -17,15 +17,17 @@ public class Post {
     String postBody;
     String postDate;
     int views;
+    int likes;
     ArrayList comments = new ArrayList<Comment>();
     ArrayList tags = new ArrayList<String>();
 
-    public Post(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags) {
+    public Post(String title, String author, String postBody, String postDate, int views, int likes, ArrayList comments, ArrayList tags) {
         this.title = title;
         this.author = author;
         this.postBody = postBody;
         this.postDate = postDate;
         this.views = views;
+        this.likes = likes;
         this.comments = comments;
         this.tags = tags;
     }
@@ -36,13 +38,22 @@ public class Post {
         return comments;
     }
 
+    public int getLikes(){
+        return likes;
+    }
+
     public ArrayList getTags() {
         return tags;
     }
 
-    public void likePost() {
+    public void viewPost() {
         views++;
     }
+
+    public void likePost(){
+        likes++;
+    }
+
 
     public void addComment(String comment) {
         comments.add(comment);
@@ -56,6 +67,7 @@ public class Post {
                 "\nPostBody: " + postBody +
                 "\nPost Date: " + postDate +
                 "\nViews: " + views +
+                "\nLikes: " + likes +
                 "\nComments: " + comments +
                 "\nTags: " + tags;
     }

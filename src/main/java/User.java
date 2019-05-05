@@ -26,12 +26,10 @@ public class User {
 
     ArrayList<Post> myPosts = new ArrayList<Post>();
 
-
     public User(String username, String password) {
         this.password = password;
         this.username = username;
     }
-
 
     public User(String username, String password, ArrayList post) {
         this.password = password;
@@ -41,32 +39,22 @@ public class User {
     public User() {
     }
 
-
     public void setUsername(String username) {
         this.username = username;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
     public String getPassword() {
         return password;
     }
-
-
     public String getUsername() {
         return username;
     }
 
-
-
-
-    public Post createPost(String title, String author, String postBody, String postDate, int views, ArrayList comments, ArrayList tags) {
-
-
+    public Post createPost(String title, String author, String postBody, String postDate, int views, int likes, ArrayList comments, ArrayList tags) {
         Date date = new Date();
-        Post post = new Post(title, author, postBody, date.toString(), 0, comments, tags);
+        Post post = new Post(title, author, postBody, date.toString(), 0, 0, comments, tags);
 
         //Create MongoDB document with user information.
         Document newPost = new Document("title", post.title)
@@ -74,6 +62,7 @@ public class User {
                 .append("postBody", post.postBody)
                 .append("postDate", date.toString())
                 .append("views", 0)
+                .append("likes",0)
                 .append("comments", comments)
                 .append("tags", tags);
 
@@ -84,11 +73,6 @@ public class User {
         //Return created post.
         return post;
     }
-
-
-
-
-
 
     public String getMyPosts() {
         Post post = new Post();
@@ -111,10 +95,6 @@ public class User {
 
         userCollection.insertOne(newUser);
     }
-
-
-
-
 
     @Override
     public String toString() {

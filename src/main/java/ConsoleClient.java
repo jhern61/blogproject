@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,8 +116,7 @@ public class ConsoleClient {
 
                     commentList.add("this is a comment");
 
-                    activeUser.createPost(title, activeUser.getUsername(), body, "null", 0, commentList, tagList);
-
+                    activeUser.createPost(title, activeUser.getUsername(), body, "bull", 0, 0, commentList, tagList);
                     //Show login menu
                     loginMenu();
                     System.out.print("\nEnter command: ");
@@ -146,18 +146,21 @@ public class ConsoleClient {
                     while (viewFlag) {
 
                         System.out.println(globalPost.get(0).toString());
-                        //Get each post from global list
-                        for (int i = 0; i <globalPost.size() ; i++) {
-                           Post post = new Post();
-                           post = globalPost.get(i);
-
-                        }
+                        Post post = (Post) globalPost.get(index);
 
                         viewPostMenu();
                         int menuCommand = scanner.nextInt();
                         switch (menuCommand) {
                             //Like Post
                             case 1:
+
+                                post.likePost();
+
+                                //Update price
+                                Bson filter = new Document("Blog", "Likes");
+                                Bson newValue = new Document("Likes", post.getLikes());
+                                Bson updateOperationDocument = new Document("$set", newValue);
+                                postCollection.updateOne(filter, updateOperationDocument);
 
 
                                 //Show menu
@@ -169,22 +172,29 @@ public class ConsoleClient {
                             //Add comment to post
                             case 2:
 
-
+                                //Add comment
                                 System.out.print("\nEnter comment: ");
                                 String comment = scanner.next();
 
+                                post.addComment(comment);
 
+                                //Show menu
+                                viewPostMenu();
+                                System.out.print("\n Enter Command: ");
+                                menuCommand = scanner.nextInt();
                                 break;
 
                             //Next Post
                             case 3:
                                 System.out.println(globalPost.get(index).toString());
+                                post.viewPost();
                                 index++;
                                 break;
 
                             //Last Post
                             case 4:
                                 System.out.println(globalPost.get(index).toString());
+                                post.viewPost();
                                 index--;
                                 break;
 
@@ -194,10 +204,7 @@ public class ConsoleClient {
                                 System.out.println("LEAVING GLOBAL POSTS....");
                                 viewFlag = false;
                                 break;
-
                         }
-
-
                     }
 
 
@@ -212,7 +219,6 @@ public class ConsoleClient {
 
                     ArrayList<Post> tagPosts = new ArrayList<Post>();
                     // tagPosts =  postWithTag(postCollection, "food");
-
                     for (int i = 0; i < tagPosts.size(); i++) {
                         System.out.println(tagPosts.get(i).toString());
                     }
@@ -238,9 +244,89 @@ public class ConsoleClient {
                     System.out.println("Invalid command");
             }
         }
-
-
     }//end while loop
+
+
+    //The following method gets all documents from Atlas and converts them to posts.
+    public static void loadFromPostCollection(MongoCollection postCollection) {
+        MongoCursor<Document> cursor = postCollection.find().iterator();
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String myTitle = (String) myObj.get("title");
+                String myAuthor = (String) myObj.get("author");
+                String myBody = (String) myObj.get("postBody");
+                String myDate = (String) myObj.get("postDate");
+                int myViews = (Integer) myObj.get("views");
+                int myLikes = (Integer) myObj.get("likes");
+                ArrayList myComments = (ArrayList) myObj.get("comments");
+                ArrayList myTags = (ArrayList) myObj.get("tags");
+                //Convert to Post type.
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, myViews, myLikes, myComments, myTags);
+
+                //Insert post from database into a list so we can access post
+                globalPost.add(post);
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+    //The method verifies the user exists in the database, and ensures login.
+    public static String findUser(MongoCollection userCollection, String login, String loginPassword) {
+        MongoCursor<Document> cursor = userCollection.find().iterator();
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String username = (String) myObj.get("username");
+                String password = (String) myObj.get("password");
+                if (username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword)) {
+                    System.out.print("Valid userName");
+                    System.out.println("Valid password");
+                }
+            }
+        } catch (NullPointerException e) {
+            System.out.print("");
+        } finally {
+            cursor.close();
+        }
+        return login;
+    }
+
+//    public static ArrayList<Post> postWithTag(MongoCollection postCollection, String tag){
+//        loadFromPostCollection(postCollection);
+//        ArrayList<Post> tagPosts = new ArrayList<Post>();
+//
+//        for (int i = 0; i <globalPost.size() ; i++) {
+//            if(globalPost.get(i).toString() == tag.toString()) {
+//                System.out.println(globalPost.get(i).toString());
+//                tagPosts.add(globalPost.add(i));
+//            }
+//        }
+//        return
+//    }
+
+
+    //The method below gets all users from Atlas and converts to User type.
+    public static void loadFromUserCollection(MongoCollection userCollection) {
+        MongoCursor<Document> cursor = userCollection.find().iterator();
+        try {
+            while (cursor.hasNext()) {
+                Document myObj = cursor.next();
+                String username = (String) myObj.get("username");
+                String password = (String) myObj.get("password");
+                ArrayList posts = (ArrayList) myObj.get("posts");
+
+                User loadedUser = new User(username, password, posts);
+                //Insert user from database into a list so we can access users
+                globalUsers.add(loadedUser);
+
+                System.out.println(loadedUser.toString());
+            }
+        } finally {
+            cursor.close();
+        }
+    }
 
     public static void loginMenu() {
         System.out.println("\n----------Welcome----------------\n" +
@@ -260,118 +346,6 @@ public class ConsoleClient {
                 "\n3 - Next post " +
                 "\n4 - Last post  " +
                 "\n5 - Exit Global posts");
-    }
-
-
-//    public static void loadFromPostCollection(MongoCollection postCollection) {
-//        MongoCursor<Document> cursor = postCollection.find().iterator();
-//        try {
-//            while (cursor.hasNext()) {
-//                Document myObj = cursor.next();
-//                String myTitle = (String) myObj.get("title");
-//                String myAuthor = (String) myObj.get("author");
-//                String myBody = (String) myObj.get("postBody");
-//                String myDate = (String) myObj.get("postDate");
-//                Object myViews = myObj.get("views");
-//                ArrayList myComments = (ArrayList) myObj.get("comments");
-//                ArrayList myTags = (ArrayList) myObj.get("tags");
-//
-//                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
-//
-//                //Insert post from database into a list so we can access post
-//                globalPost.add(post);
-//
-//                // System.out.println(post.toString());
-//            }
-//        } finally {
-//            cursor.close();
-//        }
-//}
-
-    public static void loadFromPostCollection(MongoCollection postCollection) {
-        MongoCursor<Document> cursor = postCollection.find().iterator();
-        try {
-            while (cursor.hasNext()) {
-                Document myObj = cursor.next();
-                String myTitle = (String) myObj.get("title");
-                String myAuthor = (String) myObj.get("author");
-                String myBody = (String) myObj.get("postBody");
-                String myDate = (String) myObj.get("postDate");
-                int myViews = (Integer) myObj.get("views");
-                ArrayList myComments = (ArrayList) myObj.get("comments");
-                ArrayList myTags = (ArrayList) myObj.get("tags");
-
-                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
-
-                //Insert post from database into a list so we can access post
-                globalPost.add(post);
-
-                // System.out.println(post.toString());
-            }
-        } finally {
-            cursor.close();
-        }
-
-    }
-
-    public static String findUser(MongoCollection userCollection, String login, String loginPassword) {
-        MongoCursor<Document> cursor = userCollection.find().iterator();
-
-        try {
-            while (cursor.hasNext()) {
-                Document myObj = cursor.next();
-                String username = (String) myObj.get("username");
-                String password = (String) myObj.get("password");
-                if (username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword)) {
-                    System.out.print("Valid userName");
-                    System.out.println("Valid password");
-                }
-
-            }
-        } catch (NullPointerException e) {
-            System.out.print("");
-
-        } finally {
-            cursor.close();
-
-        }
-        return login;
-
-    }
-
-//    public static ArrayList<Post> postWithTag(MongoCollection postCollection, String tag){
-//        loadFromPostCollection(postCollection);
-//        ArrayList<Post> tagPosts = new ArrayList<Post>();
-//
-//        for (int i = 0; i <globalPost.size() ; i++) {
-//            if(globalPost.get(i).toString() == tag.toString()) {
-//                System.out.println(globalPost.get(i).toString());
-//                tagPosts.add(globalPost.add(i));
-//            }
-//        }
-//        return
-//    }
-
-
-    public static void loadFromUserCollection(MongoCollection userCollection) {
-        MongoCursor<Document> cursor = userCollection.find().iterator();
-        try {
-            while (cursor.hasNext()) {
-                Document myObj = cursor.next();
-                String username = (String) myObj.get("username");
-                String password = (String) myObj.get("password");
-                ArrayList posts = (ArrayList) myObj.get("posts");
-
-                User loadedUser = new User(username, password, posts);
-
-                //Insert user from database into a list so we can access users
-                globalUsers.add(loadedUser);
-
-                System.out.println(loadedUser.toString());
-            }
-        } finally {
-            cursor.close();
-        }
     }
 
 
