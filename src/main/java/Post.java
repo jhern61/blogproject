@@ -8,11 +8,7 @@ Posts tags – categories
 Users “walls”
 *
 * */
-
-
-
 import java.util.ArrayList;
-
 
 public class Post {
 
@@ -36,25 +32,25 @@ public class Post {
 
     public Post(){}
 
-
-
     public ArrayList getComments() {
         return comments;
     }
-
 
     public ArrayList getTags() {
         return tags;
     }
 
-
     public void likePost() {
         views++;
     }
 
+    public void addComment(String comment) {
+        comments.add(comment);
+    }
+
     @Override
     public String toString() {
-        return "\n****************************\nPost: " +
+        return "\n***********************************\nPost: " +
                 "\nTitle: " + title +
                 "\nAuthor: " + author +
                 "\nPostBody: " + postBody +
