@@ -35,6 +35,7 @@ import com.mongodb.Block;
 import com.mongodb.util.JSON;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bson.conversions.Bson;
 
 public class BlogGUI extends javax.swing.JFrame {
 
@@ -42,25 +43,24 @@ public class BlogGUI extends javax.swing.JFrame {
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
     static ArrayList globalTags = new ArrayList<Post>();
-    
-    
-   //Enable MongoDB logging.
-        Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
-      
-        //Database Connection to Atlas
-        MongoClientURI uri = new MongoClientURI(
-                "mongodb://joe:money100@cluster0-shard-00-00-shmom.mongodb.net:27017," +
-                        "cluster0-shard-00-01-shmom.mongodb.net:27017,cluster0-shard-00-02-shmom.mongodb.net:27017/" +
-                        "test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true");
 
-        MongoClient mongoClient = new MongoClient(uri);
-    
+    //Enable MongoDB logging.
+    static final Logger MONGOLOGGER = Logger.getLogger("org.mongodb.driver");
+
+    //Database Connection to Atlas
+    MongoClientURI uri = new MongoClientURI(
+            "mongodb://joe:money100@cluster0-shard-00-00-shmom.mongodb.net:27017,"
+            + "cluster0-shard-00-01-shmom.mongodb.net:27017,cluster0-shard-00-02-shmom.mongodb.net:27017/"
+            + "test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true");
+
+    MongoClient mongoClient = new MongoClient(uri);
+
     //Connect to database.
     MongoDatabase database = mongoClient.getDatabase("BlogDatabase");
 
-
     MongoCollection<Document> userCollection = database.getCollection("User");
     MongoCollection<Document> postCollection = database.getCollection("Blog");
+
     /**
      * Creates new form BlogGUI
      */
@@ -69,8 +69,7 @@ public class BlogGUI extends javax.swing.JFrame {
         logOutButton.setEnabled(false);
         tagsButton.setEnabled(false);
         menuButton.setEnabled(false);
-        likeButton.setEnabled(false);
-        commentPost.setEnabled(false);
+        
     }
 
     /**
@@ -91,8 +90,6 @@ public class BlogGUI extends javax.swing.JFrame {
         clearButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         menuButton = new javax.swing.JButton();
-        likeButton = new javax.swing.JButton();
-        commentPost = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -146,21 +143,6 @@ public class BlogGUI extends javax.swing.JFrame {
             }
         });
 
-        likeButton.setText("Like Post");
-        likeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                likeButtonActionPerformed(evt);
-            }
-        });
-
-        commentPost.setText("Comment");
-        commentPost.setToolTipText("");
-        commentPost.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                commentPostActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -173,9 +155,7 @@ public class BlogGUI extends javax.swing.JFrame {
                     .addComponent(registerButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tagsButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(clearButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(menuButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(likeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(commentPost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(menuButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
@@ -199,10 +179,6 @@ public class BlogGUI extends javax.swing.JFrame {
                         .addComponent(logOutButton)
                         .addGap(34, 34, 34)
                         .addComponent(menuButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(likeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(commentPost)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tagsButton)
                         .addGap(18, 18, 18)
@@ -218,26 +194,23 @@ public class BlogGUI extends javax.swing.JFrame {
 
 // TODO add your handling code here:
         String userName = JOptionPane.showInputDialog("Enter a user name: ");
-        activeUser.setUsername(userName);
         String password = JOptionPane.showInputDialog("Enter a password: ");
-        activeUser.setPassword(password);
+        
         //encrypt password/////////////////////
         ///////////////////////
         /////////////////////
 
-        //register user to database
-        activeUser.register(activeUser.getUsername(), activeUser.getPassword());
-
         //Create User.
-        Document newUser = new Document("userName", activeUser.getUsername())
-                .append("password", activeUser.getPassword());
+        Document newUser = new Document("username", userName)
+                .append("password",password);
 
         /* Insert object into collection. */
         userCollection.insertOne(newUser);
-        
+
         //add user into global user array
         globalUsers.add(newUser);
-
+        
+        
         //output successful completion of registration notification
         JOptionPane.showMessageDialog(null, "User sucessfully registered! Please Log in");
 
@@ -247,38 +220,35 @@ public class BlogGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String login = JOptionPane.showInputDialog("Enter a user name: ");
         String loginPassword = JOptionPane.showInputDialog("Enter a password: ");
-        
+
         //decrypt password////////////////////
         //////////////////////////
         ///////////////
-        
-        
         try {
-            
-                if(findUser(userCollection,login, loginPassword)== true){
-                    
-                   activeUser.setUsername(login);
-                   logOutButton.setEnabled(true);
-                   tagsButton.setEnabled(true);
-                   menuButton.setEnabled(true);
-                   
-                   JOptionPane.showMessageDialog(null,"Sucessfuly Logged in"); 
-                }//end if 
-                
-                if(findUser(userCollection,login, loginPassword)== false){
-                    JOptionPane.showMessageDialog(null,"Wrong Username or Password");
-                }
-                
-          
+
+            if (findUser(userCollection, login, loginPassword) == true) {
+
+                activeUser.setUsername(login);
+                logOutButton.setEnabled(true);
+                tagsButton.setEnabled(true);
+                menuButton.setEnabled(true);
+
+                JOptionPane.showMessageDialog(null, "Sucessfuly Logged in");
+            }//end if 
+
+            if (findUser(userCollection, login, loginPassword) == false) {
+                JOptionPane.showMessageDialog(null, "Wrong Username or Password");
+            }
+
         } catch (Exception e) {
-            
+
         }
 
     }//GEN-LAST:event_logInButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         // TODO add your handling code here:
-       
+
         JOptionPane.showMessageDialog(null, "You have been logged out and the system will now close, GOOD BYE!");
         System.exit(0);
 
@@ -286,12 +256,11 @@ public class BlogGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void tagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tagsButtonActionPerformed
-        // TODO add your handling code here:
-        // TODO add your handling code here:
-                        String tagSearch = JOptionPane.showInputDialog("Enter tag name");
-                        
-                        //method to retreive tags from database
-                        postTags(postCollection, tagSearch);
+         // TODO add your handling code here:
+        String tagSearch = JOptionPane.showInputDialog("Enter tag name");
+
+        //method to retreive tags from database
+        postTags(postCollection, tagSearch);
     }//GEN-LAST:event_tagsButtonActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
@@ -301,89 +270,144 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
-                  
-               try{ 
-                   activeUser.getUsername();
-                   activeUser.getPassword();
-                    String menu;
-                   int selection;
-                        
-                        menu = JOptionPane.showInputDialog("\nMENU"
-                            + "\n1.Create New Post"
-                            + "\n2.View all Posts"
-                            + "\n3.View user wall\n\n");
-                    selection = Integer.parseInt(menu);
-                
-                    boolean flag = true;
-                    while(flag) {
-                    switch (selection) {
-                        case 1://create post
 
-                            ArrayList tagList = new ArrayList<String>();
-                            ArrayList commentList = new ArrayList<String>();
+        try {
+            findUser(userCollection, activeUser.getUsername(), activeUser.getPassword());
+            String menu;
+            int selection;
 
-                            String title = JOptionPane.showInputDialog("Enter title of post: ");
+            menu = JOptionPane.showInputDialog("\nMENU"
+                    + "\n1.Create New Post"
+                    + "\n2.View all Posts"
+                    + "\n3.View user wall\n\n");
+            selection = Integer.parseInt(menu);
 
-                            String body = JOptionPane.showInputDialog("Write post body: ");
-                            
-                            
-                            do {
-                                String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
-                                
-                                //add tags
-                                if (tags.startsWith("y")) {
-                                    String tag2 = JOptionPane.showInputDialog("Enter tag: ");
-                                    tagList.add(tag2);
-                                }
-                               
-                                 else {
+            boolean flag = true;
+            while (flag) {
+                switch (selection) {
+                    case 1://create post
+
+                        ArrayList tagList = new ArrayList<String>();
+                        ArrayList commentList = new ArrayList<String>();
+
+                        String title = JOptionPane.showInputDialog("Enter title of post: ");
+
+                        String body = JOptionPane.showInputDialog("Write post body: ");
+
+                        do {
+                            String tags = JOptionPane.showInputDialog("Do you want to add tags to your post? (y/n)");
+
+                            //add tags
+                            if (tags.startsWith("y")) {
+                                String tag2 = JOptionPane.showInputDialog("Enter tag: ");
+                                tagList.add(tag2);
+                            } else {
                                 break;
+                            }
+
+                        } while (true);
+
+                        activeUser.createPost(title, activeUser.getUsername(), body,
+                                "4-55-2019", 0, 0, commentList, tagList);
+
+                        break;
+
+                    case 2://View all posts in Database
+                      
+
+                        loadFromPostCollection(postCollection);
+
+                        boolean viewFlag = true;
+                        while (viewFlag) {
+                            int index = 0;
+                            textArea.append(globalPost.get(index).toString());
+                            Post post = (Post) globalPost.get(index);
+
+                            
+                            int postMenuSelection;
+                            String postMenu = JOptionPane.showInputDialog("---------- Post Options ----------------\n"
+                                    + "\n1 - Like "
+                                    + "\n2 - Comment"
+                                    + "\n3 - Next post "
+                                    + "\n4 - Last post  "
+                                    + "\n5 - Exit Global posts");
+                            postMenuSelection = Integer.parseInt(postMenu);
+
+                            switch (postMenuSelection) {
+                                //Like Post
+                                case 1:
+
+                                    post.likePost();
+
+                                    //Update like
+                                    Bson filter = new Document("title", post.getTitle());
+                                    Bson newValue = new Document("likes", post.getLikes());
+                                    Bson updateOperationDocument = new Document("$set", newValue);
+                                    postCollection.updateOne(filter, updateOperationDocument);
+                                    break;
+
+                                //Add comment to post
+                                case 2:
+
+                                    //Add comment
+                                    String comment = JOptionPane.showInputDialog("\nEnter comment: ");
+
+                                    post.addComment(comment);
+                                    textArea.append(globalPost.get(index).toString());
+
+                                    //Update comment
+                                    filter = new Document("title", post.getTitle());
+                                    newValue = new Document("comments", post.getComments());
+                                    updateOperationDocument = new Document("$set", newValue);
+                                    postCollection.updateOne(filter, updateOperationDocument);
+
+                                    break;
+
+                                //Next Post
+                                case 3:
+                                    textArea.setText("");
+                                    textArea.append(globalPost.get(index).toString());
+                                    post.viewPost();
+                                    index++;
+                                    break;
+
+                                //Last Post
+                                case 4:
+                                    textArea.setText("");
+                                    textArea.append(globalPost.get(index).toString());
+                                    post.viewPost();
+                                    index--;
+                                    break;
+
+                                //Exit
+                                case 5:
+                                    
+                                    viewFlag = false;
+                                    break;
+                            }
+
                         }
-                             
-                                
-                            } while (true);
-                            
-                            activeUser.createPost(title, activeUser.getUsername(), body,
-                                            "4-55-2019", 0, commentList, tagList);
-                            
-                          break;
-                     
-                        case 2://View all posts in Database
-                            
-                            loadFromPostCollection(postCollection);
-                            
-                            //enable like and comment buttons
-                            likeButton.setEnabled(true);
-                            commentPost.setEnabled(true);
-                            
-                            break;
-                            
-                        case 3://View User wall
-                            textArea.append(activeUser.getMyPosts());
 
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Sorry wrong input");
+                        break;
 
-                    }//end switch statement 
-                
-                    }
-        }catch (Exception e) {
-            
+                    case 3://View User wall
+                        textArea.append(activeUser.getMyPosts());
+
+                        break;
+                    
+                    default:
+                        JOptionPane.showMessageDialog(null, "Sorry wrong input");
+
+                }//end switch statement 
+
+            }
+        } catch (Exception e) {
+
         }
     }//GEN-LAST:event_menuButtonActionPerformed
 
-    private void likeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_likeButtonActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_likeButtonActionPerformed
-
-    private void commentPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commentPostActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_commentPostActionPerformed
-
     //Method to get all posts from all users
-     public void loadFromPostCollection(MongoCollection postCollection) {
+    public void loadFromPostCollection(MongoCollection postCollection) {
         MongoCursor<Document> cursor = postCollection.find().iterator();
         try {
             while (cursor.hasNext()) {
@@ -392,25 +416,22 @@ public class BlogGUI extends javax.swing.JFrame {
                 String myAuthor = (String) myObj.get("author");
                 String myBody = (String) myObj.get("postBody");
                 String myDate = (String) myObj.get("postDate");
-                Object myViews = myObj.get("views");
+                int myViews = (Integer) myObj.get("views");
+                int myLikes = (Integer) myObj.get("likes");
                 ArrayList myComments = (ArrayList) myObj.get("comments");
                 ArrayList myTags = (ArrayList) myObj.get("tags");
 
-                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, myViews, myLikes, myComments, myTags);
 
-                //Insert post from database into a list so we can access post
-                
                 //add post to global arrayist containing all posts 
                 globalPost.add(post);
-                
-                textArea.append(post.toString());
             }
         } finally {
             cursor.close();
         }
     }
-
-     /*
+   
+    /*
     public static void loadFromUserCollection(MongoCollection userCollection) {
         MongoCursor<Document> cursor = userCollection.find().iterator();
         try {
@@ -431,74 +452,71 @@ public class BlogGUI extends javax.swing.JFrame {
             cursor.close();
         }
     }*/
-    
-   
     //method to find users in database for log in button
-   public static boolean findUser(MongoCollection userCollection, String login, String loginPassword) {
-      MongoCursor<Document> cursor = userCollection.find().iterator();
-        
-      try {
+    public static boolean findUser(MongoCollection userCollection, String login, String loginPassword) {
+        MongoCursor<Document> cursor = userCollection.find().iterator();
+
+        try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
                 String username = (String) myObj.get("username");
                 String password = (String) myObj.get("password");
-               if(username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword) ){
-                  
-                   return true;
-               }
-               
-            }
-      }catch (NullPointerException e){
-          System.out.print("");
-          
-      }finally {
-            cursor.close();    
+                if (username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword)) {
 
-      }
-      return false;
-      
-     }
-   
-   //method to search posts by tags
-   public void  postTags(MongoCollection postCollection, String tag){
-     MongoCursor<Document> cursor = postCollection.find().iterator();
-        
-     try {
+                    return true;
+                }
+
+            }
+        } catch (NullPointerException e) {
+            System.out.print("");
+
+        } finally {
+            cursor.close();
+
+        }
+        return false;
+
+    }
+
+    //method to search posts by tags
+    public void postTags(MongoCollection postCollection, String tag) {
+        MongoCursor<Document> cursor = postCollection.find().iterator();
+
+        try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
                 String myTitle = (String) myObj.get("title");
                 String myAuthor = (String) myObj.get("author");
                 String myBody = (String) myObj.get("postBody");
                 String myDate = (String) myObj.get("postDate");
-                Object myViews = myObj.get("views");
+                int myViews = (Integer) myObj.get("views");
+                int myLikes = (Integer) myObj.get("likes");
                 ArrayList myComments = (ArrayList) myObj.get("comments");
                 ArrayList myTags = (ArrayList) myObj.get("tags");
 
-                Post post = new Post(myTitle, myAuthor, myBody, myDate, (Integer) myViews, myComments, myTags);
-
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, myViews, myLikes, myComments, myTags);
                 //Insert post from database into a list so we can access post
-                
+
                 //add post to global arrayist containing all posts 
                 globalPost.add(post);
-                
-                for(int i=0; i<globalPost.size(); i++){
-                    
-                    for(int x=0; x<myTags.size(); x++){
-                        if(myTags.contains(tag))
-                          
+
+                for (int i = 0; i < globalPost.size(); i++) {
+
+                    for (int x = 0; x < myTags.size(); x++) {
+                        if (myTags.contains(tag)) {
                             textArea.append(post.toString());
-                            
-                        
-                }//end inner for loop
+                           
+                        }
+
+                    }//end inner for loop
                 }//end for loop
             }
-            
-     }catch (Exception e){
-         
-     }
-                
-                
-       /*loadFromPostCollection(postCollection);
+
+        } catch (Exception e) {
+
+        }
+
+        /*loadFromPostCollection(postCollection);
         for(int i=0; i<globalPost.size(); i++){
             Object post = globalPost.get(i);
             Post temp = (Post) post;
@@ -506,11 +524,8 @@ public class BlogGUI extends javax.swing.JFrame {
                 textArea.append(temp.tags.toString());
             }
         }*/
-     
-        
- 
-   }
-   
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -526,10 +541,8 @@ public class BlogGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearButton;
-    private javax.swing.JButton commentPost;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton likeButton;
     private javax.swing.JButton logInButton;
     private javax.swing.JButton logOutButton;
     private javax.swing.JButton menuButton;
