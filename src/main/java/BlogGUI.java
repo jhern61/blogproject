@@ -43,7 +43,7 @@ public class BlogGUI extends javax.swing.JFrame {
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
     static ArrayList globalTags = new ArrayList<Post>();
-
+    static ArrayList<Post> myPosts = new ArrayList<Post>();
     //Enable MongoDB logging.
     static final Logger MONGOLOGGER = Logger.getLogger("org.mongodb.driver");
 
@@ -200,15 +200,8 @@ public class BlogGUI extends javax.swing.JFrame {
         ///////////////////////
         /////////////////////
 
-        //Create User.
-        Document newUser = new Document("username", userName)
-                .append("password",password);
-
-        /* Insert object into collection. */
-        userCollection.insertOne(newUser);
-
-        //add user into global user array
-        globalUsers.add(newUser);
+        activeUser.register(userName, password);
+       
         
         
         //output successful completion of registration notification
@@ -218,17 +211,20 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
         // TODO add your handling code here:
-        String login = JOptionPane.showInputDialog("Enter a user name: ");
-        String loginPassword = JOptionPane.showInputDialog("Enter a password: ");
-
+        
+        
         //decrypt password////////////////////
         //////////////////////////
         ///////////////
         try {
+            String username = JOptionPane.showInputDialog("Enter a user name: ");
+            String password = JOptionPane.showInputDialog("Enter a password: ");
+            
+                    
+                    
+             if (findUser(userCollection, username, password) == true) {
 
-            if (findUser(userCollection, login, loginPassword) == true) {
-
-                activeUser.setUsername(login);
+                activeUser.setUsername(username);
                 logOutButton.setEnabled(true);
                 tagsButton.setEnabled(true);
                 menuButton.setEnabled(true);
@@ -236,7 +232,7 @@ public class BlogGUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Sucessfuly Logged in");
             }//end if 
 
-            if (findUser(userCollection, login, loginPassword) == false) {
+            if (findUser(userCollection, username, password) == false) {
                 JOptionPane.showMessageDialog(null, "Wrong Username or Password");
             }
 
@@ -459,10 +455,11 @@ public class BlogGUI extends javax.swing.JFrame {
         try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
-                String username = (String) myObj.get("username");
-                String password = (String) myObj.get("password");
-                if (username.equalsIgnoreCase(login) && password.equalsIgnoreCase(loginPassword)) {
-
+                String myUsername = (String) myObj.get("username");
+                String myPassword = (String) myObj.get("password");
+                
+                if (myUsername.equalsIgnoreCase(login) && myPassword.equalsIgnoreCase(loginPassword)) {
+                    
                     return true;
                 }
 
@@ -477,6 +474,7 @@ public class BlogGUI extends javax.swing.JFrame {
         return false;
 
     }
+     
 
     //method to search posts by tags
     public void postTags(MongoCollection postCollection, String tag) {
