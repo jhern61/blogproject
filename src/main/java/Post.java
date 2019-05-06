@@ -42,6 +42,14 @@ public class Post {
         return likes;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
     public ArrayList getTags() {
         return tags;
     }
