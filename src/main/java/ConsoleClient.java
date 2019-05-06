@@ -19,7 +19,7 @@ public class ConsoleClient {
     static ArrayList globalPost = new ArrayList<Post>();
     static ArrayList globalUsers = new ArrayList<User>();
     static User activeUser = new User("test", "password");
-    static int index = 0;
+    //static int index = 0;
 
 
     public static void main(String[] args) {
@@ -83,8 +83,6 @@ public class ConsoleClient {
                     loginMenu();
                     System.out.print("\nEnter command: ");
                     userCommand = scanner.nextInt();
-
-
                     break;
 
                 //Create post
@@ -139,14 +137,15 @@ public class ConsoleClient {
                 //Print all posts
                 case 5:
 
-                    //Press 'a' to go back 'd' to go next
+                    //Load posts first
                     loadFromPostCollection(postCollection);
 
                     boolean viewFlag = true;
                     while (viewFlag) {
-
-                        System.out.println(globalPost.get(0).toString());
+                        int index = 0;
+                        System.out.println(globalPost.get(index).toString());
                         Post post = (Post) globalPost.get(index);
+
 
                         viewPostMenu();
                         int menuCommand = scanner.nextInt();
@@ -157,8 +156,8 @@ public class ConsoleClient {
                                 post.likePost();
 
                                 //Update price
-                                Bson filter = new Document("Blog", "Likes");
-                                Bson newValue = new Document("Likes", post.getLikes());
+                                Bson filter = new Document("title", post.getTitle());
+                                Bson newValue = new Document("likes", post.getLikes());
                                 Bson updateOperationDocument = new Document("$set", newValue);
                                 postCollection.updateOne(filter, updateOperationDocument);
 
@@ -177,6 +176,14 @@ public class ConsoleClient {
                                 String comment = scanner.next();
 
                                 post.addComment(comment);
+                                System.out.println(globalPost.get(index).toString());
+
+                                //Update price
+                                filter = new Document("title", post.getTitle());
+                                newValue = new Document("comments", post.getComments());
+                                updateOperationDocument = new Document("$set", newValue);
+                                postCollection.updateOne(filter, updateOperationDocument);
+
 
                                 //Show menu
                                 viewPostMenu();
@@ -200,8 +207,7 @@ public class ConsoleClient {
 
                             //Exit
                             case 5:
-
-                                System.out.println("LEAVING GLOBAL POSTS....");
+                                System.out.println("Back to home....");
                                 viewFlag = false;
                                 break;
                         }
