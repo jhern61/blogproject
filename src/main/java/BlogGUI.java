@@ -303,21 +303,27 @@ public class BlogGUI extends javax.swing.JFrame {
 
                         } while (true);
 
-                        activeUser.createPost(title, activeUser.getUsername(), body,
+                        Post newPost = activeUser.createPost(title, activeUser.getUsername(), body,
                                 "4-55-2019", 0, 0, commentList, tagList);
+                        
+                        
+                        myPosts.add(newPost);
 
                         break;
 
                     case 2://View all posts in Database
-                      
+                        int index = 0;
 
                         loadFromPostCollection(postCollection);
+                        textArea.append(globalPost.get(index).toString());
+                            
+                        Post post = (Post) globalPost.get(index);
 
                         boolean viewFlag = true;
                         while (viewFlag) {
-                            int index = 0;
-                            textArea.append(globalPost.get(index).toString());
-                            Post post = (Post) globalPost.get(index);
+                            
+                            
+                            
 
                             
                             int postMenuSelection;
@@ -330,8 +336,8 @@ public class BlogGUI extends javax.swing.JFrame {
                             postMenuSelection = Integer.parseInt(postMenu);
 
                             switch (postMenuSelection) {
-                                //Like Post
-                                case 1:
+                                
+                                case 1://Like Post
 
                                     post.likePost();
 
@@ -342,8 +348,8 @@ public class BlogGUI extends javax.swing.JFrame {
                                     postCollection.updateOne(filter, updateOperationDocument);
                                     break;
 
-                                //Add comment to post
-                                case 2:
+                                
+                                case 2://Add comment to post
 
                                     //Add comment
                                     String comment = JOptionPane.showInputDialog("\nEnter comment: ");
@@ -359,24 +365,27 @@ public class BlogGUI extends javax.swing.JFrame {
 
                                     break;
 
-                                //Next Post
-                                case 3:
+                                
+                                case 3://Next Post
+                                    
                                     textArea.setText("");
                                     textArea.append(globalPost.get(index).toString());
                                     post.viewPost();
                                     index++;
+                                    
                                     break;
 
-                                //Last Post
-                                case 4:
+                                
+                                case 4://Last Post
+                                    
                                     textArea.setText("");
                                     textArea.append(globalPost.get(index).toString());
                                     post.viewPost();
                                     index--;
                                     break;
 
-                                //Exit
-                                case 5:
+                                
+                                case 5://Exit
                                     
                                     viewFlag = false;
                                     break;
@@ -387,8 +396,11 @@ public class BlogGUI extends javax.swing.JFrame {
                         break;
 
                     case 3://View User wall
-                        textArea.append(activeUser.getMyPosts());
-
+                        
+                        
+                        String user = activeUser.getUsername();
+                        userPostFrom(postCollection, user);
+                        
                         break;
                     
                     default:
@@ -426,28 +438,42 @@ public class BlogGUI extends javax.swing.JFrame {
             cursor.close();
         }
     }
-   
-    /*
-    public static void loadFromUserCollection(MongoCollection userCollection) {
-        MongoCursor<Document> cursor = userCollection.find().iterator();
+    
+    //Method to get all posts by specific user
+    public void userPostFrom(MongoCollection postCollection, String user) {
+        MongoCursor<Document> cursor = postCollection.find().iterator();
         try {
             while (cursor.hasNext()) {
                 Document myObj = cursor.next();
-                String username = (String) myObj.get("username");
-                String password = (String) myObj.get("password");
-                ArrayList posts = (ArrayList) myObj.get("posts");
+                String myTitle = (String) myObj.get("title");
+                String myAuthor = (String) myObj.get("author");
+                String myBody = (String) myObj.get("postBody");
+                String myDate = (String) myObj.get("postDate");
+                int myViews = (Integer) myObj.get("views");
+                int myLikes = (Integer) myObj.get("likes");
+                ArrayList myComments = (ArrayList) myObj.get("comments");
+                ArrayList myTags = (ArrayList) myObj.get("tags");
 
-                User loadedUser = new User(username, password, posts);
+                Post post = new Post(myTitle, myAuthor, myBody, myDate, myViews, myLikes, myComments, myTags);
 
-                //Insert user from database into a list so we can access users
-                globalUsers.add(loadedUser);
+                //add post to global arrayist containing all posts 
+                globalPost.add(post);
                 
-                System.out.println(loadedUser.toString());
+                textArea.append("a");
+                if(myAuthor.equalsIgnoreCase(user)){
+                    textArea.append("ffff");
+                    for(int i=0; i<globalPost.size(); i++){
+                        textArea.append("ggggg");
+                    }
+                }
             }
         } finally {
             cursor.close();
         }
-    }*/
+    }
+   
+    
+    
     //method to find users in database for log in button
     public static boolean findUser(MongoCollection userCollection, String login, String loginPassword) {
         MongoCursor<Document> cursor = userCollection.find().iterator();
