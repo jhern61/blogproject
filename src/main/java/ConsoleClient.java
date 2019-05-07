@@ -112,7 +112,7 @@ public class ConsoleClient {
                         }
                     } while (true);
 
-                    commentList.add("this is a comment");
+                    //commentList.add("this is a comment");
 
                     activeUser.createPost(title, activeUser.getUsername(), body, "bull", 0, 0, commentList, tagList);
                     //Show login menu

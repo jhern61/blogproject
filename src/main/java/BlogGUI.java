@@ -60,6 +60,7 @@ public class BlogGUI extends javax.swing.JFrame {
 
     MongoCollection<Document> userCollection = database.getCollection("User");
     MongoCollection<Document> postCollection = database.getCollection("Blog");
+    
 
     /**
      * Creates new form BlogGUI
@@ -244,7 +245,7 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         // TODO add your handling code here:
-
+        globalPost.clear();
         JOptionPane.showMessageDialog(null, "You have been logged out and the system will now close, GOOD BYE!");
         System.exit(0);
 
@@ -266,7 +267,7 @@ public class BlogGUI extends javax.swing.JFrame {
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
-
+        loadFromPostCollection(postCollection);
         try {
             findUser(userCollection, activeUser.getUsername(), activeUser.getPassword());
             String menu;
@@ -312,19 +313,14 @@ public class BlogGUI extends javax.swing.JFrame {
                         break;
 
                     case 2://View all posts in Database
+                        
                         int index = 0;
-
-                        loadFromPostCollection(postCollection);
-                        textArea.append(globalPost.get(index).toString());
-                            
+                        
+                        textArea.append(globalPost.get(index).toString());  
                         Post post = (Post) globalPost.get(index);
 
-                        boolean viewFlag = true;
-                        while (viewFlag) {
-                            
-                            
-                            
-
+                        boolean viewMenuFlag = true;
+                        while (viewMenuFlag) {
                             
                             int postMenuSelection;
                             String postMenu = JOptionPane.showInputDialog("---------- Post Options ----------------\n"
@@ -340,7 +336,7 @@ public class BlogGUI extends javax.swing.JFrame {
                                 case 1://Like Post
 
                                     post.likePost();
-
+                                    textArea.append(globalPost.get(index).toString());
                                     //Update like
                                     Bson filter = new Document("title", post.getTitle());
                                     Bson newValue = new Document("likes", post.getLikes());
@@ -386,9 +382,14 @@ public class BlogGUI extends javax.swing.JFrame {
 
                                 
                                 case 5://Exit
+         
+                                    viewMenuFlag = false;
+                                    flag = false;
+                                    textArea.setText("");
                                     
-                                    viewFlag = false;
                                     break;
+                                    
+                                    
                             }
 
                         }
@@ -397,18 +398,34 @@ public class BlogGUI extends javax.swing.JFrame {
 
                     case 3://View User wall
                         
-                        loadFromPostCollection(postCollection);
+                        
                         
                         String user = activeUser.getUsername();
-                         System.out.println(user);
+                         //System.out.println(user);
                         for(int i = 0; i<globalPost.size(); i++) {
-                        Post myPost = (Post) globalPost.get(i);
-                            
+                            Post myPost = (Post) globalPost.get(i);
+                            if(user.equalsIgnoreCase(myPost.author)) {
+                                System.out.println(myPost.toString());
+                                textArea.setText("\n"+ myPost + "\n");
+                            }
                             
                         }
                       
                         
                         break;
+                        
+                        
+                        
+                    case 4: 
+                        
+                        loadFromPostCollection(postCollection);
+                        for(int i = 0; i<globalPost.size(); i++) {
+                           Post quePost = (Post) globalPost.get(i);
+                           System.out.println(quePost.toString());
+                          
+                        }
+                        break;
+                              
                     
                     default:
                         JOptionPane.showMessageDialog(null, "Sorry wrong input");
@@ -416,6 +433,7 @@ public class BlogGUI extends javax.swing.JFrame {
                 }//end switch statement 
 
             }
+
         } catch (Exception e) {
 
         }
@@ -445,40 +463,6 @@ public class BlogGUI extends javax.swing.JFrame {
             cursor.close();
         }
     }
-    
-    //Method to get all posts by specific user
-    public void userPostFrom(MongoCollection postCollection, String user) {
-        MongoCursor<Document> cursor = postCollection.find().iterator();
-        try {
-            while (cursor.hasNext()) {
-                Document myObj = cursor.next();
-                String myTitle = (String) myObj.get("title");
-                String myAuthor = (String) myObj.get("author");
-                String myBody = (String) myObj.get("postBody");
-                String myDate = (String) myObj.get("postDate");
-                int myViews = (Integer) myObj.get("views");
-                int myLikes = (Integer) myObj.get("likes");
-                ArrayList myComments = (ArrayList) myObj.get("comments");
-                ArrayList myTags = (ArrayList) myObj.get("tags");
-
-                Post post = new Post(myTitle, myAuthor, myBody, myDate, myViews, myLikes, myComments, myTags);
-
-                //add post to global arrayist containing all posts 
-                globalPost.add(post);
-                
-                textArea.append("a");
-                if(myAuthor.equalsIgnoreCase(user)){
-                    textArea.append("ffff");
-                    for(int i=0; i<globalPost.size(); i++){
-                        textArea.append("ggggg");
-                    }
-                }
-            }
-        } finally {
-            cursor.close();
-        }
-    }
-   
     
     
     //method to find users in database for log in button
