@@ -397,9 +397,16 @@ public class BlogGUI extends javax.swing.JFrame {
 
                     case 3://View User wall
                         
+                        loadFromPostCollection(postCollection);
                         
                         String user = activeUser.getUsername();
-                        userPostFrom(postCollection, user);
+                         System.out.println(user);
+                        for(int i = 0; i<globalPost.size(); i++) {
+                        Post myPost = (Post) globalPost.get(i);
+                            
+                            
+                        }
+                      
                         
                         break;
                     
