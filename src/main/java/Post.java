@@ -33,6 +33,10 @@ public class Post {
     }
 
     public Post(){}
+    
+    public String getAuthor() {
+        return author;
+    }
 
     public ArrayList getComments() {
         return comments;
