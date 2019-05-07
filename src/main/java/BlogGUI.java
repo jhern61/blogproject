@@ -425,9 +425,7 @@ public class BlogGUI extends javax.swing.JFrame {
                           
                         }
                         break;
-                              
-                    
-                    default:
+                     default:
                         JOptionPane.showMessageDialog(null, "Sorry wrong input");
 
                 }//end switch statement 
@@ -476,10 +474,8 @@ public class BlogGUI extends javax.swing.JFrame {
                 String myPassword = (String) myObj.get("password");
                 
                 if (myUsername.equalsIgnoreCase(login) && myPassword.equalsIgnoreCase(loginPassword)) {
-                    
                     return true;
                 }
-
             }
         } catch (NullPointerException e) {
             System.out.print("");
@@ -520,15 +516,11 @@ public class BlogGUI extends javax.swing.JFrame {
                     for (int x = 0; x < myTags.size(); x++) {
                         if (myTags.contains(tag)) {
                             textArea.append(post.toString());
-                           
                         }
-
                     }//end inner for loop
                 }//end for loop
             }
-
         } catch (Exception e) {
-
         }
 
         /*loadFromPostCollection(postCollection);
