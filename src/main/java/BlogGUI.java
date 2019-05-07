@@ -414,17 +414,16 @@ public class BlogGUI extends javax.swing.JFrame {
                         
                         break;
                         
-                        
-                        
-                    case 4: 
-                        
-                        loadFromPostCollection(postCollection);
-                        for(int i = 0; i<globalPost.size(); i++) {
-                           Post quePost = (Post) globalPost.get(i);
-                           System.out.println(quePost.toString());
-                          
-                        }
-                        break;
+                       
+//                    case 4: 
+//                        
+//                        loadFromPostCollection(postCollection);
+//                        for(int i = 0; i<globalPost.size(); i++) {
+//                           Post quePost = (Post) globalPost.get(i);
+//                           System.out.println(quePost.toString());
+//                          
+//                        }
+//                        break;
                      default:
                         JOptionPane.showMessageDialog(null, "Sorry wrong input");
 
