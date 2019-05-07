@@ -279,8 +279,7 @@ public class BlogGUI extends javax.swing.JFrame {
                     + "\n3.View user wall\n\n");
             selection = Integer.parseInt(menu);
 
-            boolean flag = true;
-            while (flag) {
+            
                 switch (selection) {
                     case 1://create post
 
@@ -384,7 +383,7 @@ public class BlogGUI extends javax.swing.JFrame {
                                 case 5://Exit
          
                                     viewMenuFlag = false;
-                                    flag = false;
+                                   
                                     textArea.setText("");
                                     
                                     break;
@@ -406,30 +405,22 @@ public class BlogGUI extends javax.swing.JFrame {
                             Post myPost = (Post) globalPost.get(i);
                             if(user.equalsIgnoreCase(myPost.author)) {
                                 System.out.println(myPost.toString());
-                                textArea.setText("\n"+ myPost + "\n");
+                                textArea.append("\n"+ myPost + "\n");
                             }
                             
                         }
                       
                         
                         break;
-                        
                        
-//                    case 4: 
-//                        
-//                        loadFromPostCollection(postCollection);
-//                        for(int i = 0; i<globalPost.size(); i++) {
-//                           Post quePost = (Post) globalPost.get(i);
-//                           System.out.println(quePost.toString());
-//                          
-//                        }
-//                        break;
+        
+                        
                      default:
                         JOptionPane.showMessageDialog(null, "Sorry wrong input");
 
                 }//end switch statement 
 
-            }
+            
 
         } catch (Exception e) {
 
