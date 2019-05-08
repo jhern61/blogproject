@@ -12,7 +12,7 @@ public class User {
 
     //Database Connection to Atlas
     MongoClientURI uri = new MongoClientURI(
-            "mongodb://joe:money100@cluster0-shard-00-00-shmom.mongodb.net:27017," +
+            "mongodb://<username>:<password>@cluster0-shard-00-00-shmom.mongodb.net:27017," +
                     "cluster0-shard-00-01-shmom.mongodb.net:27017,cluster0-shard-00-02-shmom.mongodb.net:27017/" +
                     "test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true");
 

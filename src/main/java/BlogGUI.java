@@ -4,20 +4,7 @@
  * It allows users to register log in, (create, edit, and delete posts), view tags, and user walls. 
  * Author: Amel Nukic & Joe Hernandez
  * Date: 4/10/2019
-Hi guys, this is your requirements for the blog/forum:
-Allow comments
-Users registration (registration/login)
-Make new posts
-Track post views
-Users able to “like” posts
-Posts tags – categories
-Users “walls”
- */
-
-/**
- *
- * @author bk8355tn
- */
+*/
 import com.mongodb.client.MongoCursor;
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
@@ -49,7 +36,7 @@ public class BlogGUI extends javax.swing.JFrame {
 
     //Database Connection to Atlas
     MongoClientURI uri = new MongoClientURI(
-            "mongodb://joe:money100@cluster0-shard-00-00-shmom.mongodb.net:27017,"
+            "mongodb://<username>:<password>@cluster0-shard-00-00-shmom.mongodb.net:27017,"
             + "cluster0-shard-00-01-shmom.mongodb.net:27017,cluster0-shard-00-02-shmom.mongodb.net:27017/"
             + "test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true");
 
